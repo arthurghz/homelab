@@ -41,6 +41,7 @@ The following applications are deployed via GitOps. Once the Cloudflare tunnel i
 
 | Application | Purpose | Domain |
 | :--- | :--- | :--- |
+| **Grafana** | Monitoring Dashboards (K8s Metrics) | `grafana.yourdomain.com` |
 | **Open WebUI** | Main Chat Interface for LLMs | `chat.yourdomain.com` |
 | **LLM Benchmark** | Stress test models & hardware | `benchmark.yourdomain.com` |
 | **Langflow** | Visual Agent & Workflow Creator | `agents.yourdomain.com` |
