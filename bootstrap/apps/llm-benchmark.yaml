@@ -17,7 +17,7 @@ spec:
               main:
                 image:
                   repository: vitorfs/llm-benchmark
-                  tag: v1.3.0
+                  tag: latest
                 env:
                   OLLAMA_BASE_URL: "http://ollama.ollama.svc.cluster.local:11434"
         service:

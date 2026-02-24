@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://langflow-ai.github.io/langflow-helm-charts
     chart: langflow-ide
-    targetRevision: 0.2.x
+    targetRevision: 0.1.x
     helm:
       values: |
         ingress:

@@ -17,7 +17,7 @@ spec:
               main:
                 image:
                   repository: vitorfs/openclaw
-                  tag: v1.3.0
+                  tag: latest
         service:
           main:
             controller: main
