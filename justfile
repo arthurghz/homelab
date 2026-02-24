@@ -30,7 +30,14 @@ apply-configs:
     @echo "Applying configurations from .env..."
     @sed -i "s|unbund.com|{{env_var("DOMAIN")}}|g" kind/values.yaml
     @sed -i "s|YOUR_TUNNEL_ID|{{env_var("CF_TUNNEL_ID")}}|g" kind/values.yaml
-    @sed -i "s|YOUR_TOKEN_HERE|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml || just gen-cf-secret && sed -i "s|YOUR_TOKEN_HERE|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml
+    @if grep -q "YOUR_TOKEN_HERE" infrastructure/secrets/cloudflare.secret.yaml 2>/dev/null; then \
+        sed -i "s|YOUR_TOKEN_HERE|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml; \
+        just encrypt infrastructure/secrets/cloudflare.secret.yaml; \
+    elif [ ! -f infrastructure/secrets/cloudflare.secret.yaml ]; then \
+        just gen-cf-secret; \
+        sed -i "s|YOUR_TOKEN_HERE|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml; \
+        just encrypt infrastructure/secrets/cloudflare.secret.yaml; \
+    fi
     @echo "Updating Repo URLs in bootstrap..."
     @find bootstrap -name "*.yaml" -exec sed -i "s|https://github.com/arthurghz/homelab.git|{{env_var("GIT_REPO_URL")}}|g" {} +
     @echo "Configurations applied successfully."
@@ -102,12 +109,22 @@ local-dns:
     @echo "Updating /etc/hosts for homelab domains..."
     @if ! grep -q "homelab-domains" /etc/hosts; then \
         echo "\n# [homelab-domains] START" | sudo tee -a /etc/hosts; \
-        echo "127.0.0.1 chat.{{env_var("DOMAIN")}} benchmark.{{env_var("DOMAIN")}} agents.{{env_var("DOMAIN")}} n8n.{{env_var("DOMAIN")}} claw.{{env_var("DOMAIN")}} grafana.{{env_var("DOMAIN")}} homer.{{env_var("DOMAIN")}}" | sudo tee -a /etc/hosts; \
+        echo "127.0.0.1 chat.{{env_var("DOMAIN")}} benchmark.{{env_var("DOMAIN")}} agents.{{env_var("DOMAIN")}} n8n.{{env_var("DOMAIN")}} claw.{{env_var("DOMAIN")}} grafana.{{env_var("DOMAIN")}} homer.{{env_var("DOMAIN")}} argocd.{{env_var("DOMAIN")}}" | sudo tee -a /etc/hosts; \
         echo "# [homelab-domains] END" | sudo tee -a /etc/hosts; \
     else \
-        sudo sed -i '/# \[homelab-domains\] START/,/# \[homelab-domains\] END/c\# [homelab-domains] START\n127.0.0.1 chat.{{env_var("DOMAIN")}} benchmark.{{env_var("DOMAIN")}} agents.{{env_var("DOMAIN")}} n8n.{{env_var("DOMAIN")}} claw.{{env_var("DOMAIN")}} grafana.{{env_var("DOMAIN")}} homer.{{env_var("DOMAIN")}}\n# [homelab-domains] END' /etc/hosts; \
+        sudo sed -i '/# \[homelab-domains\] START/,/# \[homelab-domains\] END/c\# [homelab-domains] START\n127.0.0.1 chat.{{env_var("DOMAIN")}} benchmark.{{env_var("DOMAIN")}} agents.{{env_var("DOMAIN")}} n8n.{{env_var("DOMAIN")}} claw.{{env_var("DOMAIN")}} grafana.{{env_var("DOMAIN")}} homer.{{env_var("DOMAIN")}} argocd.{{env_var("DOMAIN")}}\n# [homelab-domains] END' /etc/hosts; \
     fi
     @echo "Domains updated! You can now access services on {{env_var("DOMAIN")}}"
+
+git-sync:
+    @echo "Syncing changes to git..."
+    @git add .
+    @if git diff --cached --quiet; then \
+        echo "No changes to commit."; \
+    else \
+        git commit -m "chore: auto-sync configurations and secrets"; \
+        git push origin main || echo "Please push manually if branch differs"; \
+    fi
 
 # 🚀 DEPLOYMENT
 bootstrap:
@@ -118,4 +135,5 @@ bootstrap:
     kubectl apply -f bootstrap/root.yaml
 
 # FULL LOCAL RUN: setup -> cluster -> age -> argo
-run: setup-env apply-configs cluster-up init-sops inject-age setup-git-auth local-dns bootstrap
+run: setup-env init-sops apply-configs cluster-up inject-age setup-git-auth local-dns git-sync bootstrap
+
