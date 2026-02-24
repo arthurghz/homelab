@@ -1,0 +1,16 @@
+# infrastructure/values.yaml
+global:
+  domain: yourdomain.com
+  cloudflare:
+    tunnelId: "YOUR_TUNNEL_ID"
+    tunnelTarget: "YOUR_TUNNEL_ID.cfargotunnel.com"
+
+# Shared settings for components
+ingress-nginx:
+  controller:
+    service:
+      type: ClusterIP
+
+external-dns:
+  provider: cloudflare
+  domainFilters: ["yourdomain.com"]
