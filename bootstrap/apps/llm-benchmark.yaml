@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: llm-benchmark
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://bjw-s.github.io/helm-charts
+    chart: app-template
+    targetRevision: 3.2.1
+    helm:
+      values: |
+        controllers:
+          main:
+            containers:
+              main:
+                image:
+                  repository: vitorfs/llm-benchmark
+                  tag: v1.3.0
+                env:
+                  OLLAMA_BASE_URL: "http://ollama.ollama.svc.cluster.local:11434"
+        service:
+          main:
+            controller: main
+            ports:
+              http:
+                port: 8080
+        ingress:
+          main:
+            enabled: true
+            className: nginx
+            hosts:
+              - host: benchmark.unbund.com
+                paths:
+                  - path: /
+                    pathType: Prefix
+                    service:
+                      identifier: main
+                      port: http
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: llm-benchmark
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]

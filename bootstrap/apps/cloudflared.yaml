@@ -6,11 +6,31 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/arthurghz/homelab.git
-    targetRevision: HEAD
-    path: infrastructure
-    directory:
-      include: cloudflared.yaml
+    repoURL: https://cloudflare.github.io/helm-charts
+    chart: cloudflared
+    targetRevision: 0.3.x
+    helm:
+      values: |
+        cloudflare:
+          tunnelName: "homelab"
+          tunnelId: "22051e43-bc84-438d-b7c3-b829c1e2f6ad"
+          secretName: cloudflare-api-token
+          ingress:
+            - hostname: chat.unbund.com
+              service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+            - hostname: agents.unbund.com
+              service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+            - hostname: benchmark.unbund.com
+              service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+            - hostname: n8n.unbund.com
+              service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+            - hostname: claw.unbund.com
+              service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+            - hostname: grafana.unbund.com
+              service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+            - hostname: homer.unbund.com
+              service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+            - service: http_status:404
   destination:
     server: https://kubernetes.default.svc
     namespace: networking

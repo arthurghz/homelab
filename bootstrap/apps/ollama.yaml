@@ -6,12 +6,20 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/arthurghz/homelab.git
-    targetRevision: HEAD
-    path: apps/ollama
+    repoURL: https://otwld.github.io/ollama-helm/
+    chart: ollama
+    targetRevision: 1.x.x
+    helm:
+      values: |
+        ollama:
+          gpu:
+            enabled: false
+        persistence:
+          enabled: true
+          size: 50Gi
   destination:
     server: https://kubernetes.default.svc
-    namespace: apps
+    namespace: ollama
   syncPolicy:
-    automated: { prune: true, selfHeal: true }
+    automated: {prune: true, selfHeal: true}
     syncOptions: [CreateNamespace=true]

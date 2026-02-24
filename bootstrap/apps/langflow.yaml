@@ -1,37 +1,36 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: open-webui
+  name: langflow
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://open-webui.github.io/helm-charts
-    chart: open-webui
-    targetRevision: 4.x.x
+    repoURL: https://langflow-ai.github.io/langflow-helm-charts
+    chart: langflow-ide
+    targetRevision: 0.2.x
     helm:
       values: |
-        ollama:
-          enabled: false
-        ollamaUrls:
-          - http://ollama.ollama.svc.cluster.local:11434
         ingress:
           enabled: true
           className: nginx
-          host: chat.unbund.com
+          hosts:
+            - host: agents.unbund.com
+              paths:
+                - path: /
+                  pathType: Prefix
         persistence:
-          enabled: true
-          size: 5Gi
+          enabled: false
         resources:
           requests:
             cpu: 500m
-            memory: 512Mi
+            memory: 1Gi
           limits:
             cpu: 1000m
             memory: 2Gi
   destination:
     server: https://kubernetes.default.svc
-    namespace: open-webui
+    namespace: langflow
   syncPolicy:
     automated: {prune: true, selfHeal: true}
     syncOptions: [CreateNamespace=true]
