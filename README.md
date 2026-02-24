@@ -2,6 +2,12 @@
 
 This repository contains the SRE-grade infrastructure for a local Kubernetes Home Lab running on **Kind** (Kubernetes in Docker). It uses **ArgoCD** for GitOps and **SOPS + Age** for secret management.
 
+## 📚 Quick Links
+
+- [**Architecture**](docs/ARCHITECTURE.md): Technical overview of the cluster and GitOps flow.
+- [**Applications**](docs/APPLICATIONS.md): List of installed apps (LLMs, OpenWebUI, Benchmarking, etc.).
+- [**Agent Instructions**](agent/GEMINI.md): Guidelines for Gemini and other AI agents interacting with this repo.
+
 ## 🛠️ Prerequisites & Installation
 
 Before starting, ensure you have **Docker** installed. Then, use our automation to install the rest of the SRE toolset.
