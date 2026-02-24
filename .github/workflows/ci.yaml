@@ -1,0 +1,55 @@
+name: Homelab CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  yaml-lint:
+    name: YAML Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: sudo apt-get update && sudo apt-get install -y yamllint
+
+      - name: Run yamllint
+        run: |
+          yamllint -c .yamllint .
+
+  kubernetes-validate:
+    name: K8s Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Kube-Linter
+        uses: stackrox/kube-linter-action@v1.0.4
+        with:
+          directory: apps
+          # Optional: add infrastructure once it has more standard manifests
+          # directory: infrastructure
+
+  secret-check:
+    name: Security Scan (SOPS)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for unencrypted secrets
+        run: |
+          # Find all files that should be encrypted but might not be
+          SECRETS=$(find . -name "*.secret.yaml")
+          for file in $SECRETS; do
+            if ! grep -q "sops" "$file"; then
+              echo "Error: $file is not encrypted with SOPS!"
+              exit 1
+            fi
+          done
+          echo "All secrets are properly encrypted."
