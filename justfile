@@ -84,11 +84,11 @@ gen-cf-secret:
     @echo "apiVersion: v1" > infrastructure/secrets/cloudflare.secret.yaml
     @echo "kind: Secret" >> infrastructure/secrets/cloudflare.secret.yaml
     @echo "metadata:" >> infrastructure/secrets/cloudflare.secret.yaml
-    @echo "  name: cloudflare-api-token" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "  name: cloudflared-credentials" >> infrastructure/secrets/cloudflare.secret.yaml
     @echo "  namespace: networking" >> infrastructure/secrets/cloudflare.secret.yaml
     @echo "type: Opaque" >> infrastructure/secrets/cloudflare.secret.yaml
     @echo "stringData:" >> infrastructure/secrets/cloudflare.secret.yaml
-    @echo "  api-token: YOUR_TOKEN_HERE" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "  token: YOUR_TOKEN_HERE" >> infrastructure/secrets/cloudflare.secret.yaml
 
 encrypt path:
     sops --encrypt --in-place {{path}}

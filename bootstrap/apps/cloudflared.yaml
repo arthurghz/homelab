@@ -6,13 +6,43 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://cloudflare.github.io/helm-charts
-    chart: cloudflare-tunnel
-    targetRevision: 0.3.2
+    repoURL: https://bjw-s-labs.github.io/helm-charts
+    chart: app-template
+    targetRevision: 3.2.1
     helm:
       values: |
-        cloudflare:
-          tunnelToken: "eyJhIjoiZmNhZGZiNzE1NjljYWZjOTM0MDkxMzlmN2UxNmJlODgiLCJ0IjoiMjIwNTFlNDMtYmM4NC00MzhkLWI3YzMtYjgyOWMxZTJmNmFkIiwicyI6IlptWmhObVkyTjJZdE5ESmhOeTAwT1RFekxUazBaVFl0Tm1KbU9EbGtOR0V3WmpGaCJ9"
+        controllers:
+          main:
+            type: daemonset
+            containers:
+              main:
+                image:
+                  repository: cloudflare/cloudflared
+                  tag: latest
+                args:
+                  - tunnel
+                  - --no-autoupdate
+                  - --metrics
+                  - 0.0.0.0:60123
+                  - run
+                  - --token
+                  - $(CLOUDFLARE_TOKEN)
+                env:
+                  CLOUDFLARE_TOKEN:
+                    valueFrom:
+                      secretKeyRef:
+                        name: cloudflared-credentials
+                        key: token
+                probes:
+                  liveness:
+                    enabled: true
+                    custom: true
+                    spec:
+                      httpGet:
+                        path: /ready
+                        port: 60123
+                      initialDelaySeconds: 5
+                      periodSeconds: 5
   destination:
     server: https://kubernetes.default.svc
     namespace: networking
