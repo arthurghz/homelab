@@ -27,8 +27,8 @@ setup-env:
 
 apply-configs:
     @echo "Applying configurations from .env..."
-    @sed -i "s|unbund.com|{{env_var("DOMAIN")}}|g" kind/values.yaml
-    @sed -i "s|YOUR_TUNNEL_ID|{{env_var("CF_TUNNEL_ID")}}|g" kind/values.yaml
+    @find . -type f -name "*.yaml" -exec sed -i "s|unbund.com|{{env_var("DOMAIN")}}|g" {} +
+    @find . -type f -name "*.yaml" -exec sed -i "s|22051e43-bc84-438d-b7c3-b829c1e2f6ad|{{env_var("CF_TUNNEL_ID")}}|g" {} +
     @if [ ! -f infrastructure/secrets/cloudflare.secret.yaml ] || grep -q "YOUR_TOKEN_HERE" infrastructure/secrets/cloudflare.secret.yaml; then \
         just gen-cf-secret; \
         sed -i "s|YOUR_TUNNEL_TOKEN|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml; \
@@ -42,7 +42,7 @@ apply-configs:
 apply-secrets:
     @echo "Deploying encrypted secrets to cluster..."
     @kubectl create namespace cloudflare --dry-run=client -o yaml | kubectl apply -f -
-    @export SOPS_AGE_KEY_FILE={{AGE_KEY}} && sops --decrypt infrastructure/secrets/cloudflare.secret.yaml | kubectl apply -f -
+    @export SOPS_AGE_KEY_FILE={{AGE_KEY}} && sops --decrypt infrastructure/secrets/cloudflare.secret.yaml | sed 's/namespace: networking/namespace: cloudflare/g' | kubectl apply -f -
 
 setup-git-auth:
     @if [ "{{env_var("GIT_SSH_KEY_PATH")}}" != "NONE" ]; then \
