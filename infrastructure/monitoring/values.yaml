@@ -1,0 +1,15 @@
+prometheus:
+  prometheusSpec:
+    retention: 1d
+    storageSpec:
+      emptyDir:
+        medium: Memory
+
+grafana:
+  persistence:
+    enabled: false
+  ingress:
+    enabled: true
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: "grafana.yourdomain.com"
+    hosts: ["grafana.yourdomain.com"]
