@@ -6,11 +6,13 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/arthurghz/homelab.git
-    targetRevision: HEAD
-    path: infrastructure
-    directory:
-      include: cloudflared.yaml
+    repoURL: https://cloudflare.github.io/helm-charts
+    chart: cloudflare-tunnel
+    targetRevision: 0.3.2
+    helm:
+      values: |
+        cloudflare:
+          tunnelToken: "eyJhIjoiZmNhZGZiNzE1NjljYWZjOTM0MDkxMzlmN2UxNmJlODgiLCJ0IjoiMjIwNTFlNDMtYmM4NC00MzhkLWI3YzMtYjgyOWMxZTJmNmFkIiwicyI6IlptWmhObVkyTjJZdE5ESmhOeTAwT1RFekxUazBaVFl0Tm1KbU9EbGtOR0V3WmpGaCJ9"
   destination:
     server: https://kubernetes.default.svc
     namespace: networking
