@@ -11,8 +11,6 @@ spec:
     targetRevision: 1.16.x
     helm:
       values: |
-        config:
-          host: n8n.unbund.com
         ingress:
           enabled: true
           className: nginx
@@ -21,7 +19,9 @@ spec:
               paths:
                 - path: /
                   pathType: Prefix
-        persistence:
+        storage:
+          enabled: false
+        postgresql:
           enabled: false
         resources:
           requests:
