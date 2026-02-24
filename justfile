@@ -30,10 +30,7 @@ apply-configs:
     @echo "Applying configurations from .env..."
     @sed -i "s|unbund.com|{{env_var("DOMAIN")}}|g" kind/values.yaml
     @sed -i "s|YOUR_TUNNEL_ID|{{env_var("CF_TUNNEL_ID")}}|g" kind/values.yaml
-    @if grep -q "YOUR_TOKEN_HERE" infrastructure/secrets/cloudflare.secret.yaml 2>/dev/null; then \
-        sed -i "s|YOUR_TOKEN_HERE|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml; \
-        just encrypt infrastructure/secrets/cloudflare.secret.yaml; \
-    elif [ ! -f infrastructure/secrets/cloudflare.secret.yaml ]; then \
+    @if [ ! -f infrastructure/secrets/cloudflare.secret.yaml ] || grep -q "YOUR_TOKEN_HERE" infrastructure/secrets/cloudflare.secret.yaml; then \
         just gen-cf-secret; \
         sed -i "s|YOUR_TOKEN_HERE|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml; \
         just encrypt infrastructure/secrets/cloudflare.secret.yaml; \

@@ -1,1 +1,3 @@
-cr
+creation_rules:
+  - path_regex: infrastructure/secrets/.*\.yaml
+    age: age13569lxaxj29guql3ue2gqs2jyz8upa6mp5xcz3g49tlfte6k8slqrgvykp
