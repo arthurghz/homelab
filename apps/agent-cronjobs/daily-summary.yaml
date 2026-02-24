@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: daily-summary-agent
+  namespace: apps
+spec:
+  schedule: "0 9 * * *" # Runs daily at 9:00 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: agent
+            image: python:3.11-slim
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                pip install requests --quiet
+                python -c '
+                import requests
+                # This script can be as complex as you want (e.g., fetching news, emails)
+                # Then it calls your local Ollama for processing
+                response = requests.post("http://ollama:11434/api/generate", json={
+                    "model": "llama3",
+                    "prompt": "Summarize the following task: Check all systems and report status.",
+                    "stream": False
+                })
+                print(response.json()["response"])
+                '
+          restartPolicy: OnFailure

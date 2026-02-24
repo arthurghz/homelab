@@ -45,9 +45,18 @@ The following applications are deployed via GitOps. Once the Cloudflare tunnel i
 | **LLM Benchmark** | Stress test models & hardware | `benchmark.yourdomain.com` |
 | **Langflow** | Visual Agent & Workflow Creator | `agents.yourdomain.com` |
 | **OpenClaw** | Classic Game Engine (Claw) | `claw.yourdomain.com` |
+| **n8n** | Self-hosted Automation Tool (Low-code) | `n8n.yourdomain.com` |
 | **Ollama** | Backend LLM Engine | `Internal Service` |
 
 *Note: Replace `yourdomain.com` with your actual domain in the `/apps` YAML files.*
+
+## 🤖 Automated Agents & CronJobs
+
+This lab is designed for **Headless Automation**. You can create agents that run on a schedule:
+
+- **Example**: `apps/agent-cronjobs/daily-summary.yaml`
+- **Logic**: Use standard Kubernetes `CronJob` to trigger Python scripts that call the `ollama:11434` API.
+- **Workflow**: Use `n8n` to connect agents to external APIs (GitHub, Google, etc.) and trigger them via HTTP or schedule.
 
 ## 🏗️ Architecture Stack
 

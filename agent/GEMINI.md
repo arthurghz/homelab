@@ -18,7 +18,13 @@ When interacting with this repository, Gemini must follow these rules:
 - **Documentation**: Update `docs/ARCHITECTURE.md` or `docs/APPLICATIONS.md` when adding significant features.
 - **Structure**: Always check `bootstrap/apps.yaml` to see how applications are being discovered.
 
-## 4. Interaction Guidelines
+## 4. Automation & Agent Creation
+- **Automated Agents**: Gemini should prefer creating **CronJobs** or **Jobs** in `apps/agent-cronjobs/` for any task that needs automation.
+- **n8n Integration**: Use `n8n` for complex event-driven workflows (accessible at `n8n.yourdomain.com`).
+- **Headless Agents**: When the user asks for an "agent" to do a job periodically, write a Kubernetes `CronJob` that uses a Python image and calls the internal `ollama:11434` API.
+- **Persistence**: Do not use PVCs unless explicitly requested for small agent tasks; prefer `emptyDir` for speed and simplicity in local environments.
+
+## 5. Interaction Guidelines
 - **Language**: Default to English for all internal documentation and commit messages.
 - **Verbosity**: Be concise, professional, and explain *why* a change is being made.
 - **Commits**: Use the **Conventional Commits** format (e.g., `feat:`, `fix:`, `docs:`, `chore:`).
