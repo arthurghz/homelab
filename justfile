@@ -9,7 +9,6 @@ default:
     @just --list
 
 # 🛠️ INSTALLATION
-# Install all required binaries (SRE Toolset)
 install-tools:
     @echo "Installing SRE tools..."
     @if ! command -v brew >/dev/null; then \
@@ -32,12 +31,18 @@ apply-configs:
     @sed -i "s|YOUR_TUNNEL_ID|{{env_var("CF_TUNNEL_ID")}}|g" kind/values.yaml
     @if [ ! -f infrastructure/secrets/cloudflare.secret.yaml ] || grep -q "YOUR_TOKEN_HERE" infrastructure/secrets/cloudflare.secret.yaml; then \
         just gen-cf-secret; \
-        sed -i "s|YOUR_TOKEN_HERE|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml; \
+        sed -i "s|YOUR_TUNNEL_TOKEN|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml; \
+        sed -i "s|YOUR_DNS_TOKEN|{{env_var("CF_DNS_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml; \
         just encrypt infrastructure/secrets/cloudflare.secret.yaml; \
     fi
     @echo "Updating Repo URLs in bootstrap..."
     @find bootstrap -name "*.yaml" -exec sed -i "s|https://github.com/arthurghz/homelab.git|{{env_var("GIT_REPO_URL")}}|g" {} +
     @echo "Configurations applied successfully."
+
+apply-secrets:
+    @echo "Deploying encrypted secrets to cluster..."
+    @kubectl create namespace cloudflare --dry-run=client -o yaml | kubectl apply -f -
+    @export SOPS_AGE_KEY_FILE={{AGE_KEY}} && sops --decrypt infrastructure/secrets/cloudflare.secret.yaml | kubectl apply -f -
 
 setup-git-auth:
     @if [ "{{env_var("GIT_SSH_KEY_PATH")}}" != "NONE" ]; then \
@@ -64,8 +69,8 @@ setup-git-auth:
 # 🛠️ SETUP & CLUSTER
 cluster-up:
     @echo "Optimizing inotify limits for Kind..."
-    sudo sysctl fs.inotify.max_user_watches=524288
-    sudo sysctl fs.inotify.max_user_instances=512
+    @echo 2016 | sudo -S sysctl fs.inotify.max_user_watches=524288
+    @echo 2016 | sudo -S sysctl fs.inotify.max_user_instances=512
     @kind get clusters | grep -q {{KIND_CLUSTER}} || kind create cluster --name {{KIND_CLUSTER}} --config kind/kind-config.yaml
 
 cluster-down:
@@ -84,11 +89,12 @@ gen-cf-secret:
     @echo "apiVersion: v1" > infrastructure/secrets/cloudflare.secret.yaml
     @echo "kind: Secret" >> infrastructure/secrets/cloudflare.secret.yaml
     @echo "metadata:" >> infrastructure/secrets/cloudflare.secret.yaml
-    @echo "  name: cloudflared-credentials" >> infrastructure/secrets/cloudflare.secret.yaml
-    @echo "  namespace: networking" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "  name: cloudflare-api-key" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "  namespace: cloudflare" >> infrastructure/secrets/cloudflare.secret.yaml
     @echo "type: Opaque" >> infrastructure/secrets/cloudflare.secret.yaml
     @echo "stringData:" >> infrastructure/secrets/cloudflare.secret.yaml
-    @echo "  token: YOUR_TOKEN_HERE" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "  apiKey: YOUR_DNS_TOKEN" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "  token: YOUR_TUNNEL_TOKEN" >> infrastructure/secrets/cloudflare.secret.yaml
 
 encrypt path:
     sops --encrypt --in-place {{path}}
@@ -101,7 +107,6 @@ inject-age:
         --from-file=homelab.txt={{AGE_KEY}}
 
 # 🌐 LOCAL DOMAIN MAPPING
-# Map your local domains to localhost (requires sudo)
 local-dns:
     @echo "Updating /etc/hosts for homelab domains..."
     @if ! grep -q "homelab-domains" /etc/hosts; then \
@@ -131,11 +136,5 @@ bootstrap:
         --set server.rbacConfig."policy.default"=role:admin
     kubectl apply -f bootstrap/root.yaml
 
-apply-secrets:
-    @echo "Deploying encrypted secrets to cluster..."
-    @kubectl create namespace networking --dry-run=client -o yaml | kubectl apply -f -
-    @sops --decrypt infrastructure/secrets/cloudflare.secret.yaml | kubectl apply -f -
-
-# FULL LOCAL RUN: setup -> cluster -> age -> argo
+# FULL LOCAL RUN
 run: setup-env init-sops apply-configs cluster-up inject-age apply-secrets setup-git-auth local-dns git-sync bootstrap
-

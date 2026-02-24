@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudflared
-  namespace: networking
+  namespace: cloudflare
 spec:
   replicas: 2
   selector:
@@ -26,8 +26,8 @@ spec:
         - name: TUNNEL_TOKEN
           valueFrom:
             secretKeyRef:
-              name: cloudflare-api-token
-              key: api-token
+              name: cloudflare-api-key
+              key: token
         livenessProbe:
           httpGet:
             path: /ready
