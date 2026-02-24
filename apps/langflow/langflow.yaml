@@ -44,7 +44,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: agents.yourdomain.com
+  - host: agents.unbund.com
     http:
       paths:
       - path: /

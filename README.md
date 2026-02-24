@@ -41,19 +41,19 @@ The following applications are deployed via GitOps. Once the Cloudflare tunnel i
 
 | Application | Purpose | Domain |
 | :--- | :--- | :--- |
-| **Grafana** | Monitoring Dashboards (K8s Metrics) | `grafana.yourdomain.com` |
-| **Open WebUI** | Main Chat Interface for LLMs | `chat.yourdomain.com` |
-| **LLM Benchmark** | Stress test models & hardware | `benchmark.yourdomain.com` |
-| **Langflow** | Visual Agent & Workflow Creator | `agents.yourdomain.com` |
-| **OpenClaw** | Classic Game Engine (Claw) | `claw.yourdomain.com` |
-| **n8n** | Self-hosted Automation Tool (Low-code) | `n8n.yourdomain.com` |
+| **Grafana** | Monitoring Dashboards (K8s Metrics) | `grafana.unbund.com` |
+| **Open WebUI** | Main Chat Interface for LLMs | `chat.unbund.com` |
+| **LLM Benchmark** | Stress test models & hardware | `benchmark.unbund.com` |
+| **Langflow** | Visual Agent & Workflow Creator | `agents.unbund.com` |
+| **OpenClaw** | Classic Game Engine (Claw) | `claw.unbund.com` |
+| **n8n** | Self-hosted Automation Tool (Low-code) | `n8n.unbund.com` |
 | **Ollama** | Backend LLM Engine | `Internal Service` |
 
-*Note: Replace `yourdomain.com` with your actual domain in the `/apps` YAML files.*
+*Note: Replace `unbund.com` with your actual domain in the `/apps` YAML files.*
 
 ### 🌐 Local Access
 
-To access the applications from your browser (e.g., `http://chat.yourdomain.com`), you need to map these domains to your local IP.
+To access the applications from your browser (e.g., `http://chat.unbund.com`), you need to map these domains to your local IP.
 
 **Option 1: Quick Setup (Recommended)**
 Run the helper command (requires `sudo` to edit `/etc/hosts`):
@@ -64,7 +64,7 @@ just local-dns
 **Option 2: Manual Setup**
 Add the following line to your `/etc/hosts` file:
 ```text
-127.0.0.1 chat.yourdomain.com benchmark.yourdomain.com agents.yourdomain.com n8n.yourdomain.com claw.yourdomain.com grafana.yourdomain.com
+127.0.0.1 chat.unbund.com benchmark.unbund.com agents.unbund.com n8n.unbund.com claw.unbund.com grafana.unbund.com
 ```
 
 ## 🤖 Automated Agents & CronJobs

@@ -63,7 +63,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: chat.yourdomain.com
+  - host: chat.unbund.com
     http:
       paths:
       - path: /

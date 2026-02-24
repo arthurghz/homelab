@@ -20,7 +20,7 @@ When interacting with this repository, Gemini must follow these rules:
 
 ## 4. Automation & Agent Creation
 - **Automated Agents**: Gemini should prefer creating **CronJobs** or **Jobs** in `apps/agent-cronjobs/` for any task that needs automation.
-- **n8n Integration**: Use `n8n` for complex event-driven workflows (accessible at `n8n.yourdomain.com`).
+- **n8n Integration**: Use `n8n` for complex event-driven workflows (accessible at `n8n.unbund.com`).
 - **Headless Agents**: When the user asks for an "agent" to do a job periodically, write a Kubernetes `CronJob` that uses a Python image and calls the internal `ollama:11434` API.
 - **Persistence**: Do not use PVCs unless explicitly requested for small agent tasks; prefer `emptyDir` for speed and simplicity in local environments.
 

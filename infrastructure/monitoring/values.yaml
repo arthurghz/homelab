@@ -11,5 +11,5 @@ grafana:
   ingress:
     enabled: true
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: "grafana.yourdomain.com"
-    hosts: ["grafana.yourdomain.com"]
+      external-dns.alpha.kubernetes.io/hostname: "grafana.unbund.com"
+    hosts: ["grafana.unbund.com"]

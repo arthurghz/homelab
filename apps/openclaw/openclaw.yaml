@@ -41,7 +41,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: claw.yourdomain.com
+  - host: claw.unbund.com
     http:
       paths:
       - path: /

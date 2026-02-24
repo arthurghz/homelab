@@ -20,7 +20,7 @@ spec:
         - containerPort: 5678
         env:
         - name: N8N_HOST
-          value: "n8n.yourdomain.com"
+          value: "n8n.unbund.com"
         - name: N8N_PROTOCOL
           value: "http"
         - name: N8N_METRICS
@@ -55,7 +55,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: n8n.yourdomain.com
+  - host: n8n.unbund.com
     http:
       paths:
       - path: /

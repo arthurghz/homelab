@@ -1,6 +1,6 @@
 # infrastructure/values.yaml
 global:
-  domain: yourdomain.com
+  domain: unbund.com
   cloudflare:
     tunnelId: "YOUR_TUNNEL_ID"
     tunnelTarget: "YOUR_TUNNEL_ID.cfargotunnel.com"
@@ -13,4 +13,4 @@ ingress-nginx:
 
 external-dns:
   provider: cloudflare
-  domainFilters: ["yourdomain.com"]
+  domainFilters: ["unbund.com"]
