@@ -4,18 +4,35 @@ metadata:
   name: daily-summary-agent
   namespace: apps
 spec:
-  schedule: "0 9 * * *" # Runs daily at 9:00 AM
+  schedule: "0 9 * * *"  # Runs daily at 9:00 AM
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: agent
-            image: python:3.11-slim
+            image: python:3.11.9-slim
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 200m
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              runAsNonRoot: true
+              runAsUser: 1000
+              readOnlyRootFilesystem: true
+              seccompProfile:
+                type: RuntimeDefault
             command: ["/bin/sh", "-c"]
             args:
-              - |
-                pip install requests --quiet
+            - |
+              pip install requests --quiet
                 python -c '
                 import requests
                 # This script can be as complex as you want (e.g., fetching news, emails)

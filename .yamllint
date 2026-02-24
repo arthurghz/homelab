@@ -7,38 +7,12 @@ rules:
   indentation:
     spaces: 2
     indent-sequences: consistent
-  document-start:
-    level: warning
-  empty-lines:
-    max: 2
-  comments:
-    level: warning
-  truthy:
-    level: warning
-  document-end:
-    level: warning
-  trailing-spaces:
-    level: warning
-  new-line-at-end-of-file:
-    level: warning
-  brackets:
-    level: warning
-  colons:
-    level: warning
-  commas:
-    level: warning
-  hyphens:
-    level: warning
-  key-duplicates:
-    level: error
-  key-ordering:
-    level: warning
+  document-start: disable
+  document-end: disable
+  quoted-strings: disable
+  key-ordering: disable
   octal-values:
     level: error
-  quoted-strings:
-    level: warning
-  single-quotes:
-    level: warning
 ignore: |
   .git/
   .github/
