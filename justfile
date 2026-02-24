@@ -53,6 +53,13 @@ inject-age:
         --namespace sops-system 
         --from-file=homelab.txt={{AGE_KEY}}
 
+# 🌐 LOCAL DOMAIN MAPPING
+# Map your local domains to localhost (requires sudo)
+local-dns:
+    @echo "Updating /etc/hosts for homelab domains..."
+    @grep -q "homelab-domains" /etc/hosts || (echo "\n# [homelab-domains] START" | sudo tee -a /etc/hosts && echo "127.0.0.1 chat.yourdomain.com benchmark.yourdomain.com agents.yourdomain.com n8n.yourdomain.com claw.yourdomain.com grafana.yourdomain.com" | sudo tee -a /etc/hosts && echo "# [homelab-domains] END" | sudo tee -a /etc/hosts)
+    @echo "Domains updated! You can now access: http://chat.yourdomain.com"
+
 # 🚀 DEPLOYMENT
 bootstrap:
     kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -

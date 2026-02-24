@@ -51,6 +51,22 @@ The following applications are deployed via GitOps. Once the Cloudflare tunnel i
 
 *Note: Replace `yourdomain.com` with your actual domain in the `/apps` YAML files.*
 
+### 🌐 Local Access
+
+To access the applications from your browser (e.g., `http://chat.yourdomain.com`), you need to map these domains to your local IP.
+
+**Option 1: Quick Setup (Recommended)**
+Run the helper command (requires `sudo` to edit `/etc/hosts`):
+```bash
+just local-dns
+```
+
+**Option 2: Manual Setup**
+Add the following line to your `/etc/hosts` file:
+```text
+127.0.0.1 chat.yourdomain.com benchmark.yourdomain.com agents.yourdomain.com n8n.yourdomain.com claw.yourdomain.com grafana.yourdomain.com
+```
+
 ## 🤖 Automated Agents & CronJobs
 
 This lab is designed for **Headless Automation**. You can create agents that run on a schedule:
