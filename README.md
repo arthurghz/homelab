@@ -2,6 +2,15 @@
 
 This repository contains the SRE-grade infrastructure for a local Kubernetes Home Lab running on **Kind** (Kubernetes in Docker). It uses **ArgoCD** for GitOps and **SOPS + Age** for secret management.
 
+The goal is to provide a robust, automated environment for experimenting with **Local LLMs**, **AI Agents**, and **Modern SRE Practices**.
+
+### 🌟 Key Features
+- **Self-Healing Infrastructure**: Everything is managed by ArgoCD (App-of-Apps pattern).
+- **AI Stack ready**: Pre-installed with Ollama, Open WebUI, and Langflow.
+- **Stress Testing**: Built-in benchmarking tools to optimize LLM performance for your hardware.
+- **Secure Access**: Integrated with Cloudflare Tunnels for safe, remote exposure without port forwarding.
+- **Secret Management**: Native Git encryption with SOPS and Age.
+
 ## 📚 Quick Links
 
 - [**Architecture**](docs/ARCHITECTURE.md): Technical overview of the cluster and GitOps flow.
@@ -25,6 +34,20 @@ If you don't have `just` yet:
 sudo apt update && sudo apt install docker.io just -y
 sudo usermod -aG docker $USER && newgrp docker
 ```
+
+## 🚀 Current Applications & Domains
+
+The following applications are deployed via GitOps. Once the Cloudflare tunnel is configured, they will be accessible at:
+
+| Application | Purpose | Domain |
+| :--- | :--- | :--- |
+| **Open WebUI** | Main Chat Interface for LLMs | `chat.yourdomain.com` |
+| **LLM Benchmark** | Stress test models & hardware | `benchmark.yourdomain.com` |
+| **Langflow** | Visual Agent & Workflow Creator | `agents.yourdomain.com` |
+| **OpenClaw** | Classic Game Engine (Claw) | `claw.yourdomain.com` |
+| **Ollama** | Backend LLM Engine | `Internal Service` |
+
+*Note: Replace `yourdomain.com` with your actual domain in the `/apps` YAML files.*
 
 ## 🏗️ Architecture Stack
 
