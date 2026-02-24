@@ -1,0 +1,37 @@
+# === Security & Secrets (CRITICAL) ===
+*.key
+*.pem
+*.age
+*.txt
+.env
+.env.*
+!README*.txt
+homelab.txt
+*.dec.yaml
+*.tmp.yaml
+
+# === Kubernetes & Infrastructure ===
+.kube/
+kubeconfig
+*.log
+.cluster-info/
+.kind-config-local.yaml
+
+# === Tooling & Local Environment ===
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# === Helm specific ===
+charts/
+tmp/
+*.tgz
+.helm/
+
+# === Cloudflare / Cloudflared ===
+cert.pem
+*.json
+!infrastructure/secrets/*.secret.yaml
