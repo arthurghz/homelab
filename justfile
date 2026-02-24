@@ -134,6 +134,11 @@ bootstrap:
         --set server.rbacConfig."policy.default"=role:admin
     kubectl apply -f bootstrap/root.yaml
 
+apply-secrets:
+    @echo "Deploying encrypted secrets to cluster..."
+    @kubectl create namespace networking --dry-run=client -o yaml | kubectl apply -f -
+    @sops --decrypt infrastructure/secrets/cloudflare.secret.yaml | kubectl apply -f -
+
 # FULL LOCAL RUN: setup -> cluster -> age -> argo
-run: setup-env init-sops apply-configs cluster-up inject-age setup-git-auth local-dns git-sync bootstrap
+run: setup-env init-sops apply-configs cluster-up inject-age apply-secrets setup-git-auth local-dns git-sync bootstrap
 
