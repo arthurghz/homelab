@@ -1,6 +1,8 @@
 # homelab - arthurghz
+set dotenv-load := true
+
 KIND_CLUSTER := "homelab"
-AGE_KEY := "~/.age/homelab.txt"
+AGE_KEY := env_var_or_default("AGE_KEY_PATH", home_dir() + "/.age/homelab.txt")
 REPO_URL := "https://github.com/arthurghz/homelab.git"
 
 default:
@@ -10,61 +12,110 @@ default:
 # Install all required binaries (SRE Toolset)
 install-tools:
     @echo "Installing SRE tools..."
-    @if ! command -v brew >/dev/null; then 
-        /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; 
+    @if ! command -v brew >/dev/null; then \
+        /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
     fi
     brew install kind kubectl helm sops age just argocd
+
+# 🛠️ SETUP & CONFIGURATION
+setup-env:
+    @if [ ! -f .env ]; then \
+        cp .env.example .env; \
+        echo ".env created from .env.example. Please edit it with your credentials."; \
+    else \
+        echo ".env already exists."; \
+    fi
+
+apply-configs:
+    @echo "Applying configurations from .env..."
+    @sed -i "s|unbund.com|{{env_var("DOMAIN")}}|g" kind/values.yaml
+    @sed -i "s|YOUR_TUNNEL_ID|{{env_var("CF_TUNNEL_ID")}}|g" kind/values.yaml
+    @sed -i "s|YOUR_TOKEN_HERE|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml || just gen-cf-secret && sed -i "s|YOUR_TOKEN_HERE|{{env_var("CF_API_TOKEN")}}|g" infrastructure/secrets/cloudflare.secret.yaml
+    @echo "Updating Repo URLs in bootstrap..."
+    @find bootstrap -name "*.yaml" -exec sed -i "s|https://github.com/arthurghz/homelab.git|{{env_var("GIT_REPO_URL")}}|g" {} +
+    @echo "Configurations applied successfully."
+
+setup-git-auth:
+    @if [ "{{env_var("GIT_SSH_KEY_PATH")}}" != "NONE" ]; then \
+        echo "Creating ArgoCD repository secret using SSH key..."; \
+        kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -; \
+        kubectl create secret generic repo-auth \
+            --namespace argocd \
+            --from-literal=url={{env_var("GIT_REPO_URL")}} \
+            --from-file=sshPrivateKey={{env_var("GIT_SSH_KEY_PATH")}} \
+            --dry-run=client -o yaml | kubectl apply -f -; \
+        kubectl label secret repo-auth -n argocd "argocd.argoproj.io/secret-type=repository" --overwrite; \
+    elif [ "{{env_var("GIT_TOKEN")}}" != "YOUR_GITHUB_TOKEN" ]; then \
+        echo "Creating ArgoCD repository secret using Token..."; \
+        kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -; \
+        kubectl create secret generic repo-auth \
+            --namespace argocd \
+            --from-literal=url={{env_var("GIT_REPO_URL")}} \
+            --from-literal=username={{env_var("GIT_USER")}} \
+            --from-literal=password={{env_var("GIT_TOKEN")}} \
+            --dry-run=client -o yaml | kubectl apply -f -; \
+        kubectl label secret repo-auth -n argocd "argocd.argoproj.io/secret-type=repository" --overwrite; \
+    fi
 
 # 🛠️ SETUP & CLUSTER
 cluster-up:
     @echo "Optimizing inotify limits for Kind..."
     sudo sysctl fs.inotify.max_user_watches=524288
     sudo sysctl fs.inotify.max_user_instances=512
-    kind create cluster --name {{KIND_CLUSTER}} --config infrastructure/kind-config.yaml
+    @kind get clusters | grep -q {{KIND_CLUSTER}} || kind create cluster --name {{KIND_CLUSTER}} --config kind/kind-config.yaml
 
 cluster-down:
     kind delete cluster --name {{KIND_CLUSTER}}
 
 # 🔐 SECRET MANAGEMENT
 init-sops:
-    @if [ ! -f {{AGE_KEY}} ]; then 
-        mkdir -p ~/.age && age-keygen -o {{AGE_KEY}}; 
+    @if [ ! -f {{AGE_KEY}} ]; then \
+        mkdir -p "{{AGE_KEY}}/.." && age-keygen -o {{AGE_KEY}}; \
     fi
     @echo "Public Key: $$(grep 'public key' {{AGE_KEY}} | cut -d' ' -f4)"
 
 gen-cf-secret:
     @echo "Creating template: infrastructure/secrets/cloudflare.secret.yaml"
     @mkdir -p infrastructure/secrets
-    @printf "apiVersion: v1
-kind: Secret
-metadata:
-  name: cloudflare-api-token
-  namespace: networking
-type: Opaque
-stringData:
-  api-token: YOUR_TOKEN_HERE" > infrastructure/secrets/cloudflare.secret.yaml
+    @echo "apiVersion: v1" > infrastructure/secrets/cloudflare.secret.yaml
+    @echo "kind: Secret" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "metadata:" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "  name: cloudflare-api-token" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "  namespace: networking" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "type: Opaque" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "stringData:" >> infrastructure/secrets/cloudflare.secret.yaml
+    @echo "  api-token: YOUR_TOKEN_HERE" >> infrastructure/secrets/cloudflare.secret.yaml
 
 encrypt path:
     sops --encrypt --in-place {{path}}
 
 inject-age:
     kubectl create namespace sops-system --dry-run=client -o yaml | kubectl apply -f -
-    kubectl create secret generic helm-secrets-private-keys 
-        --namespace sops-system 
+    kubectl delete secret generic helm-secrets-private-keys --namespace sops-system --ignore-not-found
+    kubectl create secret generic helm-secrets-private-keys \
+        --namespace sops-system \
         --from-file=homelab.txt={{AGE_KEY}}
 
 # 🌐 LOCAL DOMAIN MAPPING
 # Map your local domains to localhost (requires sudo)
 local-dns:
     @echo "Updating /etc/hosts for homelab domains..."
-    @grep -q "homelab-domains" /etc/hosts || (echo "\n# [homelab-domains] START" | sudo tee -a /etc/hosts && echo "127.0.0.1 chat.unbund.com benchmark.unbund.com agents.unbund.com n8n.unbund.com claw.unbund.com grafana.unbund.com homer.unbund.com" | sudo tee -a /etc/hosts && echo "# [homelab-domains] END" | sudo tee -a /etc/hosts)
-    @echo "Domains updated! You can now access: http://chat.unbund.com"
+    @if ! grep -q "homelab-domains" /etc/hosts; then \
+        echo "\n# [homelab-domains] START" | sudo tee -a /etc/hosts; \
+        echo "127.0.0.1 chat.{{env_var("DOMAIN")}} benchmark.{{env_var("DOMAIN")}} agents.{{env_var("DOMAIN")}} n8n.{{env_var("DOMAIN")}} claw.{{env_var("DOMAIN")}} grafana.{{env_var("DOMAIN")}} homer.{{env_var("DOMAIN")}}" | sudo tee -a /etc/hosts; \
+        echo "# [homelab-domains] END" | sudo tee -a /etc/hosts; \
+    else \
+        sudo sed -i '/# \[homelab-domains\] START/,/# \[homelab-domains\] END/c\# [homelab-domains] START\n127.0.0.1 chat.{{env_var("DOMAIN")}} benchmark.{{env_var("DOMAIN")}} agents.{{env_var("DOMAIN")}} n8n.{{env_var("DOMAIN")}} claw.{{env_var("DOMAIN")}} grafana.{{env_var("DOMAIN")}} homer.{{env_var("DOMAIN")}}\n# [homelab-domains] END' /etc/hosts; \
+    fi
+    @echo "Domains updated! You can now access services on {{env_var("DOMAIN")}}"
 
 # 🚀 DEPLOYMENT
 bootstrap:
     kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-    helm upgrade --install argocd argo/argo-cd --repo https://argoproj.github.io/argo-helm --namespace argocd --wait
+    helm upgrade --install argocd argo-cd --repo https://argoproj.github.io/argo-helm --namespace argocd --wait \
+        --set server.extraArgs={--insecure} \
+        --set server.rbacConfig."policy.default"=role:admin
     kubectl apply -f bootstrap/root.yaml
 
-# FULL LOCAL RUN: cluster -> age -> argo
-run: cluster-up init-sops inject-age bootstrap
+# FULL LOCAL RUN: setup -> cluster -> age -> argo
+run: setup-env apply-configs cluster-up init-sops inject-age setup-git-auth local-dns bootstrap

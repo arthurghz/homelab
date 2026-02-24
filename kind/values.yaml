@@ -1,9 +1,9 @@
-# infrastructure/values.yaml
+   m # infrastructure/values.yaml
 global:
   domain: unbund.com
   cloudflare:
-    tunnelId: "YOUR_TUNNEL_ID"
-    tunnelTarget: "YOUR_TUNNEL_ID.cfargotunnel.com"
+    tunnelId: "22051e43-bc84-438d-b7c3-b829c1e2f6ad"
+    tunnelTarget: "22051e43-bc84-438d-b7c3-b829c1e2f6ad.cfargotunnel.com"
 
 # Shared settings for components
 ingress-nginx:

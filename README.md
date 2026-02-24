@@ -98,16 +98,32 @@ We use **Mozilla SOPS** with **Age** to keep secrets safe in Git.
 
 ## 🚀 Getting Started
 
+To spin up the entire cluster with minimal manual effort, follow these steps:
+
+### 1. Initialize Configuration
+First, generate your `.env` file from the template:
+```bash
+just setup-env
+```
+
+### 2. Configure Credentials
+Edit the newly created `.env` file and fill in your details:
+- **DOMAIN**: Your base domain (unbund.com).
+- **CF_TUNNEL_ID**: Your Cloudflare Tunnel ID.
+- **CF_API_TOKEN**: Your Cloudflare API Token.
+- **AGE_KEY_PATH**: (Optional) Custom path for your Age key.
+
+### 3. Run the Lab
 Simply run:
 ```bash
 just run
 ```
 
-This command will:
-1. Optimize Linux `inotify` limits.
-2. Create a Kind cluster with optimized port mapping.
-3. Inject your private Age key into the cluster.
-4. Bootstrap ArgoCD and apply the Root Application.
+This command will now:
+1. **Apply Configs**: Automatically replace placeholders in `infrastructure/values.yaml` and create the Cloudflare secret.
+2. **Setup Cluster**: Create the Kind cluster with optimized settings.
+3. **Secret Management**: Initialize and inject your Age private key.
+4. **Bootstrap**: Install ArgoCD and apply the Root Application.
 
 ---
-**⚠️ Note:** Data is ephemeral (EmptyDir). Destroying the cluster will wipe all data. Always back up your `~/.age/homelab.txt` file!
+**⚠️ Note:** Data is ephemeral (EmptyDir). Destroying the cluster will wipe all data. Always back up your `~/.age/homelab.txt` file (or the path defined in `AGE_KEY_PATH`)!

@@ -1,4 +1,1 @@
-creation_rules:
-  - path_regex: .*\.secret\.yaml$
-    # Replace with your public key from 'just init-sops'
-    age: "age1_REPLACE_ME_WITH_PUBLIC_KEY"
+cr
