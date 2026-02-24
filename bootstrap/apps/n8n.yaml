@@ -19,7 +19,7 @@ spec:
               paths:
                 - path: /
                   pathType: Prefix
-        storage:
+        persistence:
           enabled: false
         postgresql:
           enabled: false
