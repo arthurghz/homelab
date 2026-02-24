@@ -57,7 +57,7 @@ inject-age:
 # Map your local domains to localhost (requires sudo)
 local-dns:
     @echo "Updating /etc/hosts for homelab domains..."
-    @grep -q "homelab-domains" /etc/hosts || (echo "\n# [homelab-domains] START" | sudo tee -a /etc/hosts && echo "127.0.0.1 chat.unbund.com benchmark.unbund.com agents.unbund.com n8n.unbund.com claw.unbund.com grafana.unbund.com" | sudo tee -a /etc/hosts && echo "# [homelab-domains] END" | sudo tee -a /etc/hosts)
+    @grep -q "homelab-domains" /etc/hosts || (echo "\n# [homelab-domains] START" | sudo tee -a /etc/hosts && echo "127.0.0.1 chat.unbund.com benchmark.unbund.com agents.unbund.com n8n.unbund.com claw.unbund.com grafana.unbund.com homer.unbund.com" | sudo tee -a /etc/hosts && echo "# [homelab-domains] END" | sudo tee -a /etc/hosts)
     @echo "Domains updated! You can now access: http://chat.unbund.com"
 
 # 🚀 DEPLOYMENT

@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homer-config
+  namespace: apps
+data:
+  config.yml: |
+    title: "Unbund Homelab"
+    subtitle: "AI & Automation Dashboard"
+    logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Kubernetes_logo_%28not_shadowed%29.svg"
+    header: true
+    footer: '<p>Built with ❤️ and ArgoCD</p>'
+    columns: "3"
+    connectivityTest: false
+    defaults:
+      layout: columns
+      color: theme
+    theme: default
+    services:
+      - name: "AI Stack"
+        icon: "fas fa-brain"
+        items:
+          - name: "Chat (Open WebUI)"
+            logo: "https://raw.githubusercontent.com/open-webui/open-webui/main/public/favicon.png"
+            subtitle: "LLM Interface"
+            tag: "AI"
+            url: "http://chat.unbund.com"
+          - name: "Langflow"
+            logo: "https://www.langflow.org/favicon.ico"
+            subtitle: "Agent Creation"
+            tag: "AI"
+            url: "http://agents.unbund.com"
+          - name: "LLM Benchmark"
+            subtitle: "Stress Testing"
+            tag: "Bench"
+            url: "http://benchmark.unbund.com"
+
+      - name: "Automation"
+        icon: "fas fa-robot"
+        items:
+          - name: "n8n"
+            logo: "https://n8n.io/favicon.ico"
+            subtitle: "Workflow Automation"
+            tag: "Low-Code"
+            url: "http://n8n.unbund.com"
+
+      - name: "Infrastructure"
+        icon: "fas fa-server"
+        items:
+          - name: "Grafana"
+            logo: "https://grafana.com/static/img/favicons/favicon-32x32.png"
+            subtitle: "Monitoring"
+            tag: "Ops"
+            url: "http://grafana.unbund.com"
+          - name: "ArgoCD"
+            logo: "https://argoproj.github.io/argo-cd/assets/favicon.png"
+            subtitle: "GitOps"
+            tag: "CD"
+            url: "http://argocd.unbund.com"
+
+      - name: "Fun"
+        icon: "fas fa-gamepad"
+        items:
+          - name: "OpenClaw"
+            subtitle: "Classic Game"
+            tag: "Game"
+            url: "http://claw.unbund.com"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homer
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homer
+  template:
+    metadata:
+      labels:
+        app: homer
+    spec:
+      containers:
+      - name: homer
+        image: b4bz/homer:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: config-volume
+          mountPath: /www/assets/config.yml
+          subPath: config.yml
+      volumes:
+      - name: config-volume
+        configMap:
+          name: homer-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: homer
+  namespace: apps
+spec:
+  selector:
+    app: homer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homer
+  namespace: apps
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: homer.unbund.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: homer
+            port:
+              number: 80
