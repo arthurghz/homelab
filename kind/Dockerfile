@@ -11,15 +11,19 @@ RUN apt-get update && apt-get install -y curl gnupg \
 # Configura o containerd para usar o nvidia-container-runtime
 RUN nvidia-ctk runtime configure --runtime=containerd
 
-# Configura o caminho das bibliotecas para o WSL2
-RUN echo "/usr/lib/wsl/lib" > /etc/ld.so.conf.d/wsl.conf
+# Configura o toolkit para o modo WSL2
+RUN nvidia-ctk config --set nvidia-container-runtime.modes.cdi.default-kind=management
 
-# Configura o nvidia-container-runtime para usar o ldconfig do sistema
+# CRITICAL PARA WSL2: Configura o nvidia-container-runtime para encontrar o runc e as libs
 RUN mkdir -p /etc/nvidia-container-runtime && \
     echo "disable-require = false" > /etc/nvidia-container-runtime/config.toml && \
-    echo "ldconfig = \"/sbin/ldconfig\"" >> /etc/nvidia-container-runtime/config.toml
+    echo "ldconfig = \"/sbin/ldconfig\"" >> /etc/nvidia-container-runtime/config.toml && \
+    echo "runtime-kind = \"runc\"" >> /etc/nvidia-container-runtime/config.toml && \
+    echo "runtime-path = \"/usr/local/sbin/runc\"" >> /etc/nvidia-container-runtime/config.toml
 
-# Cria um serviço systemd para rodar o ldconfig no boot, já que os mounts do WSL2 
-# só aparecem quando o container (nó) já está rodando.
+# Garante que o sistema procure bibliotecas no mount do WSL2
+RUN echo "/usr/lib/wsl/lib" > /etc/ld.so.conf.d/wsl.conf
+
+# Cria um serviço systemd para rodar o ldconfig no boot
 RUN printf "[Unit]\nDescription=Update ldconfig for WSL2\nAfter=multi-user.target\n\n[Service]\nType=oneshot\nExecStart=/sbin/ldconfig\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/wsl-ldconfig.service && \
     systemctl enable wsl-ldconfig.service
