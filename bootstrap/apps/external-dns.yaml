@@ -25,8 +25,8 @@ spec:
           - name: CF_API_TOKEN
             valueFrom:
               secretKeyRef:
-                name: cloudflare-api-key
-                key: apiKey
+                name: cloudflare-dns-token
+                key: token
   destination:
     server: https://kubernetes.default.svc
     namespace: cloudflare
