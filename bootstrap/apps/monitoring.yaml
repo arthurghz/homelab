@@ -11,6 +11,9 @@ spec:
     targetRevision: 61.x
     helm:
       values: |
+        kubelet:
+          serviceMonitor:
+            insecureSkipVerify: true
         prometheus:
           prometheusSpec:
             retention: 1d
