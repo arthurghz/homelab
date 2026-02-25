@@ -20,7 +20,7 @@ spec:
       labels:
         name: nvidia-device-plugin-ds
     spec:
-      runtimeClassName: nvidia
+      # Run on default runtime to ensure startup even if nvidia-runtime is failing
       tolerations:
       - key: nvidia.com/gpu
         operator: Exists
@@ -38,12 +38,39 @@ spec:
             value: all
           - name: NVIDIA_DRIVER_CAPABILITIES
             value: all
+          - name: LD_LIBRARY_PATH
+            value: /usr/lib/wsl/lib
         securityContext:
           privileged: true
         volumeMounts:
         - name: device-plugin
           mountPath: /var/lib/kubelet/device-plugins
+        - name: wsl-lib
+          mountPath: /usr/lib/wsl/lib
+        - name: nvidia0
+          mountPath: /dev/nvidia0
+        - name: nvidiactl
+          mountPath: /dev/nvidiactl
+        - name: nvidia-uvm
+          mountPath: /dev/nvidia-uvm
+        - name: dxg
+          mountPath: /dev/dxg
       volumes:
       - name: device-plugin
         hostPath:
           path: /var/lib/kubelet/device-plugins
+      - name: wsl-lib
+        hostPath:
+          path: /usr/lib/wsl/lib
+      - name: nvidia0
+        hostPath:
+          path: /dev/nvidia0
+      - name: nvidiactl
+        hostPath:
+          path: /dev/nvidiactl
+      - name: nvidia-uvm
+        hostPath:
+          path: /dev/nvidia-uvm
+      - name: dxg
+        hostPath:
+          path: /dev/dxg
