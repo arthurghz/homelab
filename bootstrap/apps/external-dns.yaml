@@ -21,7 +21,6 @@ spec:
         extraArgs:
           - --cloudflare-proxied
           - --ingress-class=nginx
-          - --prefer-cname
         env:
           - name: CF_API_TOKEN
             valueFrom:
