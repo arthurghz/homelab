@@ -1,61 +1,44 @@
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
-nodes:
-- role: control-plane
-  image: kindest/node:v1.31.0
-  kubeadmConfigPatches:
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"
-  extraPortMappings:
-  - containerPort: 80
-    hostPort: 80
-    protocol: TCP
-  - containerPort: 443
-    hostPort: 443
-    protocol: TCP
-- role: worker
-  image: kindest/node:v1.31.0
-  extraMounts: &nvidia-mounts
-    - hostPath: /dev/nvidia0
-      containerPath: /dev/nvidia0
-    - hostPath: /dev/nvidiactl
-      containerPath: /dev/nvidiactl
-    - hostPath: /dev/nvidia-uvm
-      containerPath: /dev/nvidia-uvm
-    - hostPath: /dev/nvidia-uvm-tools
-      containerPath: /dev/nvidia-uvm-tools
-    - hostPath: /usr/bin/nvidia-smi
-      containerPath: /usr/bin/nvidia-smi
-    - hostPath: /usr/bin/nvidia-container-runtime
-      containerPath: /usr/bin/nvidia-container-runtime
-    - hostPath: /usr/bin/nvidia-container-toolkit
-      containerPath: /usr/bin/nvidia-container-toolkit
-    - hostPath: /usr/bin/nvidia-container-cli
-      containerPath: /usr/bin/nvidia-container-cli
-    - hostPath: /etc/nvidia-container-runtime
-      containerPath: /etc/nvidia-container-runtime
-    - hostPath: /usr/lib/wsl
-      containerPath: /usr/lib/wsl
-- role: worker
-  image: kindest/node:v1.31.0
-  extraMounts: *nvidia-mounts
-- role: worker
-  image: kindest/node:v1.31.0
-  extraMounts: *nvidia-mounts
-- role: worker
-  image: kindest/node:v1.31.0
-  extraMounts: *nvidia-mounts
-- role: worker
-  image: kindest/node:v1.31.0
-  extraMounts: *nvidia-mounts
-containerdConfigPatches:
-- |
-  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
-    privileged_without_host_devices = false
-    runtime_type = "io.containerd.runc.v2"
-    [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
-      BinaryName = "/usr/bin/nvidia-container-runtime"
 
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.31.0
+
+  - role: worker
+    image: kindest/node:v1.31.0
+    extraMounts: &nvidia
+      - hostPath: /dev/nvidia0
+        containerPath: /dev/nvidia0
+      - hostPath: /dev/nvidiactl
+        containerPath: /dev/nvidiactl
+      - hostPath: /dev/nvidia-uvm
+        containerPath: /dev/nvidia-uvm
+      - hostPath: /dev/nvidia-uvm-tools
+        containerPath: /dev/nvidia-uvm-tools
+      - hostPath: /usr/lib/wsl/lib
+        containerPath: /usr/lib/wsl/lib
+
+  - role: worker
+    image: kindest/node:v1.31.0
+    extraMounts: *nvidia
+
+  - role: worker
+    image: kindest/node:v1.31.0
+    extraMounts: *nvidia
+
+  - role: worker
+    image: kindest/node:v1.31.0
+    extraMounts: *nvidia
+
+  - role: worker
+    image: kindest/node:v1.31.0
+    extraMounts: *nvidia
+
+containerdConfigPatches:
+  - |
+    [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
+      runtime_type = "io.containerd.runc.v2"
+      privileged_without_host_devices = false
+      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
+        BinaryName = "/usr/bin/nvidia-container-runtime"
