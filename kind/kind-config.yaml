@@ -27,12 +27,18 @@ nodes:
       containerPath: /dev/nvidia-uvm
     - hostPath: /dev/nvidia-uvm-tools
       containerPath: /dev/nvidia-uvm-tools
+    - hostPath: /usr/bin/nvidia-smi
+      containerPath: /usr/bin/nvidia-smi
     - hostPath: /usr/bin/nvidia-container-runtime
       containerPath: /usr/bin/nvidia-container-runtime
-    - hostPath: /usr/bin/nvidia-container-runtime-hook
-      containerPath: /usr/bin/nvidia-container-runtime-hook
-    - hostPath: /usr/lib/wsl/lib
-      containerPath: /usr/lib/wsl/lib
+    - hostPath: /usr/bin/nvidia-container-toolkit
+      containerPath: /usr/bin/nvidia-container-toolkit
+    - hostPath: /usr/bin/nvidia-container-cli
+      containerPath: /usr/bin/nvidia-container-cli
+    - hostPath: /etc/nvidia-container-runtime
+      containerPath: /etc/nvidia-container-runtime
+    - hostPath: /usr/lib/wsl
+      containerPath: /usr/lib/wsl
 - role: worker
   image: kindest/node:v1.31.0
   extraMounts: *nvidia-mounts
@@ -52,3 +58,4 @@ containerdConfigPatches:
     runtime_type = "io.containerd.runc.v2"
     [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
       BinaryName = "/usr/bin/nvidia-container-runtime"
+
