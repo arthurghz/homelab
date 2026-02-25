@@ -23,6 +23,7 @@ spec:
                   PORT: 18789
                   OPENCLAW_HOST: 0.0.0.0
                   OPENCLAW_PORT: 18789
+                  NODE_OPTIONS: "--max-old-space-size=1536"
                 resources:
                   requests:
                     cpu: 100m
