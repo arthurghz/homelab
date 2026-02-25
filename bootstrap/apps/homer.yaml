@@ -24,89 +24,98 @@ spec:
                 paths:
                   - path: /
                     pathType: Prefix
+        configMaps:
+          config:
+            enabled: true
+            data:
+              config.yml: |
+                title: "Unbund Homelab"
+                subtitle: "AI & Automation Dashboard"
+                logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Kubernetes_logo_%28not_shadowed%29.svg"
+                header: true
+                footer: '<p>Built with ❤️ by Gemini CLI</p>'
+                columns: "3"
+                connectivityTest: false
+                theme: "paper-dark"
+                colors:
+                  light:
+                    highlight-primary: "#3367d6"
+                    highlight-secondary: "#4285f4"
+                    highlight-hover: "#5a95f5"
+                    background: "#f5f5f5"
+                    card-background: "#ffffff"
+                    text: "#202124"
+                    text-header: "#ffffff"
+                    text-footer: "#ffffff"
+                    font-family: "Roboto, sans-serif"
+                  dark:
+                    highlight-primary: "#4285f4"
+                    highlight-secondary: "#3367d6"
+                    highlight-hover: "#5a95f5"
+                    background: "#121212"
+                    card-background: "#1e1e1e"
+                    text: "#e8eaed"
+                    text-header: "#ffffff"
+                    text-footer: "#ffffff"
+                    font-family: "Roboto, sans-serif"
+                services:
+                  - name: "AI Stack"
+                    icon: "fas fa-brain"
+                    items:
+                      - name: "Chat (Open WebUI)"
+                        logo: "https://raw.githubusercontent.com/open-webui/open-webui/main/public/favicon.png"
+                        subtitle: "LLM Interface"
+                        tag: "AI"
+                        url: "https://chat.unbund.com"
+                      - name: "Langflow"
+                        logo: "https://www.langflow.org/favicon.ico"
+                        subtitle: "Agent Creation"
+                        tag: "AI"
+                        url: "https://agents.unbund.com"
+                      - name: "LLM Benchmark"
+                        icon: "fas fa-tachometer-alt"
+                        subtitle: "Stress Testing"
+                        tag: "Bench"
+                        url: "https://benchmark.unbund.com"
+                  - name: "Automation"
+                    icon: "fas fa-robot"
+                    items:
+                      - name: "n8n"
+                        logo: "https://n8n.io/favicon.ico"
+                        subtitle: "Workflow Automation"
+                        tag: "Low-Code"
+                        url: "https://n8n.unbund.com"
+                  - name: "Infrastructure"
+                    icon: "fas fa-server"
+                    items:
+                      - name: "Grafana"
+                        logo: "https://grafana.com/static/img/favicons/favicon-32x32.png"
+                        subtitle: "Monitoring"
+                        tag: "Ops"
+                        url: "https://grafana.unbund.com"
+                      - name: "ArgoCD"
+                        logo: "https://argoproj.github.io/argo-cd/assets/favicon.png"
+                        subtitle: "GitOps"
+                        tag: "CD"
+                        url: "https://argocd.unbund.com"
+                  - name: "Fun"
+                    icon: "fas fa-gamepad"
+                    items:
+                      - name: "OpenClaw"
+                        icon: "fas fa-cat"
+                        subtitle: "Classic Game"
+                        tag: "Game"
+                        url: "https://claw.unbund.com"
         persistence:
           config:
             enabled: true
             type: configMap
             name: homer-config
-        configInline:
-          title: "Unbund Homelab"
-          subtitle: "AI & Automation Dashboard"
-          logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Kubernetes_logo_%28not_shadowed%29.svg"
-          header: true
-          footer: '<p>Built with ❤️ by Gemini CLI</p>'
-          columns: "3"
-          connectivityTest: false
-          theme: "paper-dark"
-          colors:
-            light:
-              highlight-primary: "#3367d6"
-              highlight-secondary: "#4285f4"
-              highlight-hover: "#5a95f5"
-              background: "#f5f5f5"
-              card-background: "#ffffff"
-              text: "#202124"
-              text-header: "#ffffff"
-              text-footer: "#ffffff"
-              font-family: "Roboto, sans-serif"
-            dark:
-              highlight-primary: "#4285f4"
-              highlight-secondary: "#3367d6"
-              highlight-hover: "#5a95f5"
-              background: "#121212"
-              card-background: "#1e1e1e"
-              text: "#e8eaed"
-              text-header: "#ffffff"
-              text-footer: "#ffffff"
-              font-family: "Roboto, sans-serif"
-          services:
-            - name: "AI Stack"
-              icon: "fas fa-brain"
-              items:
-                - name: "Chat (Open WebUI)"
-                  logo: "https://raw.githubusercontent.com/open-webui/open-webui/main/public/favicon.png"
-                  subtitle: "LLM Interface"
-                  tag: "AI"
-                  url: "https://chat.unbund.com"
-                - name: "Langflow"
-                  logo: "https://www.langflow.org/favicon.ico"
-                  subtitle: "Agent Creation"
-                  tag: "AI"
-                  url: "https://agents.unbund.com"
-                - name: "LLM Benchmark"
-                  icon: "fas fa-tachometer-alt"
-                  subtitle: "Stress Testing"
-                  tag: "Bench"
-                  url: "https://benchmark.unbund.com"
-            - name: "Automation"
-              icon: "fas fa-robot"
-              items:
-                - name: "n8n"
-                  logo: "https://n8n.io/favicon.ico"
-                  subtitle: "Workflow Automation"
-                  tag: "Low-Code"
-                  url: "https://n8n.unbund.com"
-            - name: "Infrastructure"
-              icon: "fas fa-server"
-              items:
-                - name: "Grafana"
-                  logo: "https://grafana.com/static/img/favicons/favicon-32x32.png"
-                  subtitle: "Monitoring"
-                  tag: "Ops"
-                  url: "https://grafana.unbund.com"
-                - name: "ArgoCD"
-                  logo: "https://argoproj.github.io/argo-cd/assets/favicon.png"
-                  subtitle: "GitOps"
-                  tag: "CD"
-                  url: "https://argocd.unbund.com"
-            - name: "Fun"
-              icon: "fas fa-gamepad"
-              items:
-                - name: "OpenClaw"
-                  icon: "fas fa-cat"
-                  subtitle: "Classic Game"
-                  tag: "Game"
-                  url: "https://claw.unbund.com"
+            advancedMounts:
+              main:
+                main:
+                  - path: /www/assets/config.yml
+                    subPath: config.yml
   destination:
     server: https://kubernetes.default.svc
     namespace: homer
