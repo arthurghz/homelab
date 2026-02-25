@@ -20,7 +20,7 @@ spec:
       labels:
         name: nvidia-device-plugin-ds
     spec:
-      # Rodar no runtime padrão para garantir o startup
+      runtimeClassName: nvidia
       tolerations:
       - key: nvidia.com/gpu
         operator: Exists
@@ -36,19 +36,12 @@ spec:
             value: all
           - name: NVIDIA_DRIVER_CAPABILITIES
             value: all
-          - name: LD_LIBRARY_PATH
-            value: /usr/lib/wsl/lib
         securityContext:
           privileged: true
         volumeMounts:
         - name: device-plugin
           mountPath: /var/lib/kubelet/device-plugins
-        - name: wsl-lib
-          mountPath: /usr/lib/wsl/lib
       volumes:
       - name: device-plugin
         hostPath:
           path: /var/lib/kubelet/device-plugins
-      - name: wsl-lib
-        hostPath:
-          path: /usr/lib/wsl/lib
