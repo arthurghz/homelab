@@ -19,6 +19,8 @@ spec:
         env:
           - name: FAIL_ON_INIT_ERROR
             value: "false"
+          - name: LD_LIBRARY_PATH
+            value: "/usr/lib/wsl/lib"
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
