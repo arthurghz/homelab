@@ -20,6 +20,7 @@ spec:
           - unbund.com
         extraArgs:
           - --target=22051e43-bc84-438d-b7c3-b829c1e2f6ad.cfargotunnel.com
+          - --cloudflare-proxied
         env:
           - name: CF_API_TOKEN
             valueFrom:

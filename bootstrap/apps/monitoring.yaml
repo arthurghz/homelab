@@ -25,6 +25,8 @@ spec:
             ingressClassName: nginx
             annotations:
               external-dns.alpha.kubernetes.io/hostname: "grafana.unbund.com"
+              external-dns.alpha.kubernetes.io/target: "22051e43-bc84-438d-b7c3-b829c1e2f6ad.cfargotunnel.com"
+              external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
             hosts: ["grafana.unbund.com"]
             path: /
   destination:
