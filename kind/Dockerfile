@@ -8,7 +8,11 @@ RUN apt-get update && apt-get install -y curl gnupg \
       tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
     && apt-get update && apt-get install -y nvidia-container-toolkit
 
-# No WSL2, precisamos garantir que as libs sejam encontradas
-RUN echo "/usr/lib/wsl/lib" > /etc/ld.so.conf.d/wsl.conf
+# Configura o toolkit para usar o runc interno do Kind
+RUN nvidia-ctk runtime configure --runtime=containerd
 
-# O patch do containerd será feito via kind-config.yaml
+# No WSL2, precisamos garantir que as libs sejam encontradas e que o toolkit saiba onde está o config
+RUN mkdir -p /etc/nvidia-container-runtime && \
+    nvidia-ctk config --set nvidia-container-runtime.modes.cdi.default-kind=management --output /etc/nvidia-container-runtime/config.toml
+
+RUN echo "/usr/lib/wsl/lib" > /etc/ld.so.conf.d/wsl.conf
