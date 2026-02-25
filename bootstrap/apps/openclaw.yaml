@@ -18,6 +18,20 @@ spec:
                 image:
                   repository: ghcr.io/openclaw/openclaw
                   tag: latest
+                env:
+                  HOST: 0.0.0.0
+                  PORT: 18789
+                  OPENCLAW_HOST: 0.0.0.0
+                  OPENCLAW_PORT: 18789
+                args:
+                  - "--host"
+                  - "0.0.0.0"
+                resources:
+                  requests:
+                    cpu: 100m
+                    memory: 128Mi
+                  limits:
+                    memory: 512Mi
         service:
           main:
             controller: main
