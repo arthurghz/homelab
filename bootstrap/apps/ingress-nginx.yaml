@@ -23,11 +23,11 @@ spec:
             default: true
           extraArgs:
             enable-ssl-passthrough: "true"
+          # Isso impede o Nginx de reportar o IP interno nos Ingressos
+          publishService:
+            enabled: false
           tolerations:
             - key: "node-role.kubernetes.io/control-plane"
-              operator: "Exists"
-              effect: "NoSchedule"
-            - key: "node-role.kubernetes.io/master"
               operator: "Exists"
               effect: "NoSchedule"
   destination:
