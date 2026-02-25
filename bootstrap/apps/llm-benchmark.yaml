@@ -13,6 +13,8 @@ spec:
       values: |
         controllers:
           main:
+            pod:
+              runtimeClassName: nvidia
             containers:
               main:
                 image:
@@ -24,9 +26,11 @@ spec:
                   requests:
                     cpu: 500m
                     memory: 1Gi
+                    nvidia.com/gpu: 1
                   limits:
                     cpu: 1000m
-                    memory: 2Gi
+                    memory: 4Gi
+                    nvidia.com/gpu: 1
         service:
           main:
             controller: main
