@@ -131,9 +131,7 @@ git-sync:
 # 🚀 DEPLOYMENT
 bootstrap:
     kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-    helm upgrade --install argocd argo-cd --repo https://argoproj.github.io/argo-helm --namespace argocd --wait \
-        --set server.extraArgs={--insecure} \
-        --set server.rbacConfig."policy.default"=role:admin
+    helm upgrade --install argocd argo-cd --repo https://argoproj.github.io/argo-helm --namespace argocd --wait
     kubectl apply -f bootstrap/root.yaml
 
 # FULL LOCAL RUN
