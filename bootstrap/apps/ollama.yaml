@@ -26,11 +26,11 @@ spec:
             value: all
           - name: NVIDIA_DRIVER_CAPABILITIES
             value: all
-        # Baixa modelos no startup
+        # Baixa modelos no startup (em background)
         lifecycle:
           postStart:
             exec:
-              command: ["/bin/sh", "-c", "ollama pull llama3.2 && ollama pull deepseek-coder-v2:lite && ollama pull phi3 && ollama pull gemma2:9b && ollama pull qwen2.5:7b"]
+              command: ["/bin/sh", "-c", "sleep 10 && ollama pull llama3.2 && ollama pull deepseek-coder-v2:lite && ollama pull phi3 && ollama pull gemma2:9b && ollama pull qwen2.5:7b &"]
         ingress:
           enabled: true
           annotations:
