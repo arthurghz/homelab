@@ -14,6 +14,7 @@ spec:
         runtimeClassName: nvidia
         deviceDiscoveryStrategy: nvml
         nodeSelector: {}
+        affinity: {}
         env:
           - name: LD_LIBRARY_PATH
             value: "/usr/lib/wsl/lib"
