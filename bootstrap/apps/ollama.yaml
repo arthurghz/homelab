@@ -15,7 +15,11 @@ spec:
           gpu:
             enabled: true
             type: nvidia
+            number: 1
           runtimeClassName: nvidia
+        resources:
+          limits:
+            nvidia.com/gpu: 1
         extraEnv:
           - name: NVIDIA_VISIBLE_DEVICES
             value: all
