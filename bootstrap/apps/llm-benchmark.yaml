@@ -15,7 +15,6 @@ spec:
           main:
             pod:
               runtimeClassName: nvidia
-              hostIPC: true
             containers:
               main:
                 image:
@@ -47,16 +46,16 @@ spec:
                     nvidia.com/gpu: 1
         persistence:
           wsl-lib:
-            enabled: true
             type: hostPath
             hostPath: /usr/lib/wsl
-            mountPath: /usr/lib/wsl
-            readOnly: true
+            globalMounts:
+              - path: /usr/lib/wsl
+                readOnly: true
           dxg:
-            enabled: true
             type: hostPath
             hostPath: /dev/dxg
-            mountPath: /dev/dxg
+            globalMounts:
+              - path: /dev/dxg
         service:
           main:
             controller: main
@@ -66,6 +65,7 @@ spec:
         ingress:
           main:
             enabled: true
+            className: nginx
             annotations:
               kubernetes.io/ingress.class: "nginx"
               external-dns.alpha.kubernetes.io/hostname: "benchmark.unbund.com"
