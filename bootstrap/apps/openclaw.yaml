@@ -16,14 +16,14 @@ spec:
             containers:
               main:
                 image:
-                  repository: ghcr.io/vitorfs/openclaw
+                  repository: ghcr.io/openclaw/openclaw
                   tag: latest
         service:
           main:
             controller: main
             ports:
               http:
-                port: 8080
+                port: 18789
         ingress:
           main:
             enabled: true
