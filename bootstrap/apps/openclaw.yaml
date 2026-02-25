@@ -16,7 +16,7 @@ spec:
             containers:
               main:
                 image:
-                  repository: vitorfs/openclaw
+                  repository: ghcr.io/vitorfs/openclaw
                   tag: latest
         service:
           main:
