@@ -16,3 +16,4 @@ rules:
 ignore: |
   .git/
   .github/
+  **/*.secret.yaml
