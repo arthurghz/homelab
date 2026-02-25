@@ -20,6 +20,9 @@ spec:
                   tag: latest
                 env:
                   OLLAMA_BASE_URL: "http://ollama.ollama.svc.cluster.local:11434"
+                resources:
+                  limits:
+                    nvidia.com/gpu: 1
         service:
           main:
             controller: main

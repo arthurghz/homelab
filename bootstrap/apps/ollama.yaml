@@ -13,7 +13,8 @@ spec:
       values: |
         ollama:
           gpu:
-            enabled: false
+            enabled: true
+            type: nvidia
         persistence:
           enabled: true
           size: 50Gi

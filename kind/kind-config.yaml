@@ -24,3 +24,10 @@ nodes:
   image: kindest/node:v1.31.0
 - role: worker
   image: kindest/node:v1.31.0
+containerdConfigPatches:
+- |
+  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
+    privileged_without_host_devices = false
+    runtime_type = "io.containerd.runc.v2"
+    [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
+      BinaryName = "/usr/bin/nvidia-container-runtime"
