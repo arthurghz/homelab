@@ -6,7 +6,7 @@ nodes:
     image: kindest/node:v1.31.0
 
   - role: worker
-    image: kindest/node:v1.31.0
+    image: homelab-kind-nvidia:v1.31.0
     labels:
       nvidia.com/gpu.present: "true"
     extraMounts: &nvidia
@@ -18,25 +18,25 @@ nodes:
         containerPath: /usr/bin/nvidia-container-runtime
 
   - role: worker
-    image: kindest/node:v1.31.0
+    image: homelab-kind-nvidia:v1.31.0
     labels:
       nvidia.com/gpu.present: "true"
     extraMounts: *nvidia
 
   - role: worker
-    image: kindest/node:v1.31.0
+    image: homelab-kind-nvidia:v1.31.0
     labels:
       nvidia.com/gpu.present: "true"
     extraMounts: *nvidia
 
   - role: worker
-    image: kindest/node:v1.31.0
+    image: homelab-kind-nvidia:v1.31.0
     labels:
       nvidia.com/gpu.present: "true"
     extraMounts: *nvidia
 
   - role: worker
-    image: kindest/node:v1.31.0
+    image: homelab-kind-nvidia:v1.31.0
     labels:
       nvidia.com/gpu.present: "true"
     extraMounts: *nvidia

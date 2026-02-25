@@ -13,7 +13,9 @@ spec:
       values: |
         ollama:
           gpu:
-            enabled: false
+            enabled: true
+            type: nvidia
+          runtimeClassName: nvidia
         extraEnv:
           - name: NVIDIA_VISIBLE_DEVICES
             value: all
