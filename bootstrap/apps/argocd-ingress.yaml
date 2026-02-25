@@ -4,11 +4,6 @@ metadata:
   name: argocd-server
   namespace: argocd
   annotations:
-
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    # O SEGREDO ESTÁ AQUI: Diz ao external-dns para usar CNAME
     external-dns.alpha.kubernetes.io/hostname: argocd.unbund.com
     external-dns.alpha.kubernetes.io/target: 22051e43-bc84-438d-b7c3-b829c1e2f6ad.cfargotunnel.com
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
@@ -24,4 +19,4 @@ spec:
           service:
             name: argocd-server
             port:
-              number: 443
+              number: 80

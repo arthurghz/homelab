@@ -12,6 +12,8 @@ spec:
     helm:
       values: |
         controller:
+          updateStrategy:
+            type: Recreate
           watchIngressWithoutClassName: true
           nodeSelector:
             ingress-ready: "true"
