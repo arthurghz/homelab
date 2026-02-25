@@ -20,8 +20,8 @@ nodes:
         containerPath: /dev/nvidia-uvm
       - hostPath: /dev/nvidia-uvm-tools
         containerPath: /dev/nvidia-uvm-tools
-      - hostPath: /usr/lib/wsl/lib
-        containerPath: /usr/lib/wsl/lib
+      - hostPath: /usr/lib/wsl
+        containerPath: /usr/lib/wsl
 
   - role: worker
     image: homelab-kind-nvidia:v1.31.0

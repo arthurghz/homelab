@@ -20,7 +20,7 @@ spec:
       labels:
         name: nvidia-device-plugin-ds
     spec:
-      # Run on default runtime to ensure startup even if nvidia-runtime is failing
+      # Run on default runtime
       tolerations:
       - key: nvidia.com/gpu
         operator: Exists
@@ -45,8 +45,8 @@ spec:
         volumeMounts:
         - name: device-plugin
           mountPath: /var/lib/kubelet/device-plugins
-        - name: wsl-lib
-          mountPath: /usr/lib/wsl/lib
+        - name: wsl
+          mountPath: /usr/lib/wsl
         - name: nvidia0
           mountPath: /dev/nvidia0
         - name: nvidiactl
@@ -59,9 +59,9 @@ spec:
       - name: device-plugin
         hostPath:
           path: /var/lib/kubelet/device-plugins
-      - name: wsl-lib
+      - name: wsl
         hostPath:
-          path: /usr/lib/wsl/lib
+          path: /usr/lib/wsl
       - name: nvidia0
         hostPath:
           path: /dev/nvidia0
