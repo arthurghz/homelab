@@ -21,6 +21,7 @@ spec:
                   repository: vllm/vllm-openai
                   tag: v0.6.2
                 args:
+                  - "--model"
                   - "Qwen/Qwen2.5-0.5B-Instruct"
                   - "--gpu-memory-utilization"
                   - "0.3"
