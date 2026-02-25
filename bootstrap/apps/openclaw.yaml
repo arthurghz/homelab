@@ -23,9 +23,6 @@ spec:
                   PORT: 18789
                   OPENCLAW_HOST: 0.0.0.0
                   OPENCLAW_PORT: 18789
-                args:
-                  - "--host"
-                  - "0.0.0.0"
                 resources:
                   requests:
                     cpu: 100m
