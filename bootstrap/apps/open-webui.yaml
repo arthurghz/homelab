@@ -17,12 +17,16 @@ spec:
           - http://ollama.ollama.svc.cluster.local:11434
         ingress:
           enabled: true
-          className: nginx
+          ingressClassName: nginx
           annotations:
             external-dns.alpha.kubernetes.io/hostname: "chat.unbund.com"
             external-dns.alpha.kubernetes.io/target: "22051e43-bc84-438d-b7c3-b829c1e2f6ad.cfargotunnel.com"
             external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
-          host: chat.unbund.com
+          hosts:
+            - host: chat.unbund.com
+              paths:
+                - path: /
+                  pathType: Prefix
         persistence:
           enabled: true
           size: 5Gi

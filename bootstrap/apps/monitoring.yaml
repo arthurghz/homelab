@@ -18,6 +18,11 @@ spec:
               emptyDir:
                 medium: Memory
         grafana:
+          grafana.ini:
+            auth.anonymous:
+              enabled: true
+              org_role: Admin
+              org_name: Main Org.
           persistence:
             enabled: false
           ingress:
