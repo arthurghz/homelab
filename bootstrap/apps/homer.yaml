@@ -24,18 +24,36 @@ spec:
                 paths:
                   - path: /
                     pathType: Prefix
-        config:
+        configInline:
           title: "Unbund Homelab"
           subtitle: "AI & Automation Dashboard"
           logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Kubernetes_logo_%28not_shadowed%29.svg"
           header: true
-          footer: '<p>Built with ❤️ and ArgoCD</p>'
+          footer: '<p>Built with ❤️ by Gemini CLI</p>'
           columns: "3"
           connectivityTest: false
-          defaults:
-            layout: columns
-            color: theme
-          theme: default
+          theme: "paper-dark"
+          colors:
+            light:
+              highlight-primary: "#3367d6"
+              highlight-secondary: "#4285f4"
+              highlight-hover: "#5a95f5"
+              background: "#f5f5f5"
+              card-background: "#ffffff"
+              text: "#202124"
+              text-header: "#ffffff"
+              text-footer: "#ffffff"
+              font-family: "Roboto, sans-serif"
+            dark:
+              highlight-primary: "#4285f4"
+              highlight-secondary: "#3367d6"
+              highlight-hover: "#5a95f5"
+              background: "#121212"
+              card-background: "#1e1e1e"
+              text: "#e8eaed"
+              text-header: "#ffffff"
+              text-footer: "#ffffff"
+              font-family: "Roboto, sans-serif"
           services:
             - name: "AI Stack"
               icon: "fas fa-brain"
@@ -51,6 +69,7 @@ spec:
                   tag: "AI"
                   url: "https://agents.unbund.com"
                 - name: "LLM Benchmark"
+                  icon: "fas fa-tachometer-alt"
                   subtitle: "Stress Testing"
                   tag: "Bench"
                   url: "https://benchmark.unbund.com"
@@ -79,6 +98,7 @@ spec:
               icon: "fas fa-gamepad"
               items:
                 - name: "OpenClaw"
+                  icon: "fas fa-cat"
                   subtitle: "Classic Game"
                   tag: "Game"
                   url: "https://claw.unbund.com"
