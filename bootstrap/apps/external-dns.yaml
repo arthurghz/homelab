@@ -16,6 +16,11 @@ spec:
         policy: sync
         provider:
           name: cloudflare
+        domainFilters:
+          - unbund.com
+        extraArgs:
+          - --cloudflare-proxied
+          - --ingress-class=nginx
         env:
           - name: CF_API_TOKEN
             valueFrom:

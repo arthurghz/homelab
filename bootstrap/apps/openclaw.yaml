@@ -28,6 +28,10 @@ spec:
           main:
             enabled: true
             className: nginx
+            annotations:
+              external-dns.alpha.kubernetes.io/hostname: "claw.unbund.com"
+              external-dns.alpha.kubernetes.io/target: "22051e43-bc84-438d-b7c3-b829c1e2f6ad.cfargotunnel.com"
+              external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
             hosts:
               - host: claw.unbund.com
                 paths:
