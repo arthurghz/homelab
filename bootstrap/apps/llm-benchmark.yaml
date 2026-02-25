@@ -29,7 +29,7 @@ spec:
         ingress:
           main:
             enabled: true
-            className: nginx
+            ingressClassName: nginx
             annotations:
               external-dns.alpha.kubernetes.io/hostname: "benchmark.unbund.com"
               external-dns.alpha.kubernetes.io/target: "22051e43-bc84-438d-b7c3-b829c1e2f6ad.cfargotunnel.com"

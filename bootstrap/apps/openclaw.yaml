@@ -16,7 +16,7 @@ spec:
             containers:
               main:
                 image:
-                  repository: vitorfs/openclaw-docker
+                  repository: vitorfs/openclaw
                   tag: latest
         service:
           main:
