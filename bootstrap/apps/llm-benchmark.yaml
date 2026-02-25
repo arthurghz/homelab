@@ -24,6 +24,8 @@ spec:
                   - "--model"
                   - "facebook/opt-125m"
                   - "--enforce-eager"
+                  - "--gpu-memory-utilization"
+                  - "0.5"
                 env:
                   - name: NVIDIA_VISIBLE_DEVICES
                     value: all
