@@ -19,14 +19,15 @@ spec:
               main:
                 image:
                   repository: vllm/vllm-openai
-                  tag: v0.6.2
+                  tag: v0.6.3.post1
                 args:
                   - "--model"
-                  - "Qwen/Qwen2.5-0.5B-Instruct"
+                  - "facebook/opt-125m"
                   - "--gpu-memory-utilization"
                   - "0.3"
                   - "--max-model-len"
                   - "1024"
+                  - "--enforce-eager"
                 env:
                   - name: NVIDIA_VISIBLE_DEVICES
                     value: all
