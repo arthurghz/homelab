@@ -11,16 +11,16 @@ spec:
         image: curlimages/curl:latest
         command: ["/bin/sh", "-c"]
         args:
-          - |
-            echo "Waiting for Ollama to be ready..."
-            until curl -s http://ollama.ollama.svc.cluster.local:11434/api/tags > /dev/null; do
-              echo "Ollama is not ready yet. Sleeping 5s..."
-              sleep 5
-            done
-            MODELS="llama3.2 deepseek-coder-v2:lite phi3 gemma2:9b qwen2.5:7b"
-            for model in $MODELS; do
-              echo "Pulling $model..."
-              curl -s -X POST http://ollama.ollama.svc.cluster.local:11434/api/pull -d "{\"name\": \"$model\"}"
-            done
+        - |
+          echo "Waiting for Ollama to be ready..."
+          until curl -s http://ollama.ollama.svc.cluster.local:11434/api/tags > /dev/null; do
+            echo "Ollama is not ready yet. Sleeping 5s..."
+            sleep 5
+          done
+          MODELS="llama3.2 deepseek-coder-v2:lite phi3 gemma2:9b qwen2.5:7b"
+          for model in $MODELS; do
+            echo "Pulling $model..."
+            curl -s -X POST http://ollama.ollama.svc.cluster.local:11434/api/pull -d "{\"name\": \"$model\"}"
+          done
       restartPolicy: OnFailure
   backoffLimit: 4
