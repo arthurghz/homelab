@@ -13,8 +13,8 @@ spec:
       values: |
         ollama:
           gpu:
-            enabled: false # Desativamos o resource request do K8s
-          env:
+            enabled: false
+          extraEnv:
             - name: NVIDIA_VISIBLE_DEVICES
               value: all
             - name: NVIDIA_DRIVER_CAPABILITIES
