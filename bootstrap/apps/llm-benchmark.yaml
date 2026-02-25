@@ -31,6 +31,8 @@ spec:
                     value: all
                   - name: LD_LIBRARY_PATH
                     value: /usr/lib/wsl/lib
+                  - name: NVIDIA_DISABLE_REQUIRE
+                    value: "true"
                 resources:
                   requests:
                     cpu: 500m
@@ -40,6 +42,18 @@ spec:
                     cpu: 1000m
                     memory: 4Gi
                     nvidia.com/gpu: 1
+        persistence:
+          wsl-lib:
+            enabled: true
+            type: hostPath
+            hostPath: /usr/lib/wsl
+            mountPath: /usr/lib/wsl
+            readOnly: true
+          dxg:
+            enabled: true
+            type: hostPath
+            hostPath: /dev/dxg
+            mountPath: /dev/dxg
         service:
           main:
             controller: main
