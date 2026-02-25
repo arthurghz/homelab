@@ -15,11 +15,12 @@ spec:
           main:
             pod:
               runtimeClassName: nvidia
+              hostIPC: true
             containers:
               main:
                 image:
                   repository: vllm/vllm-openai
-                  tag: latest
+                  tag: v0.5.4
                 args:
                   - "facebook/opt-125m"
                   - "--enforce-eager"
@@ -34,8 +35,6 @@ spec:
                     value: /usr/lib/wsl/lib
                   - name: NVIDIA_DISABLE_REQUIRE
                     value: "true"
-                  - name: VLLM_NO_USAGE_STATS
-                    value: "1"
                 resources:
                   requests:
                     cpu: 500m
