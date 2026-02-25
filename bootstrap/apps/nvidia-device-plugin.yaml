@@ -13,7 +13,10 @@ spec:
       values: |
         config:
           map:
-            default:
+            default: |-
+              version: v1
+              flags:
+                migStrategy: none
               plugin:
                 deviceDiscoveryStrategy: nvml
         env:
