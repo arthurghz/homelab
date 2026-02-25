@@ -12,7 +12,6 @@ spec:
     helm:
       values: |
         deviceDiscoveryStrategy: nvml
-        failOnInitError: "false"
         env:
           - name: LD_LIBRARY_PATH
             value: "/usr/lib/wsl/lib"
