@@ -40,9 +40,14 @@ apply-configs:
     @echo "Configurations applied successfully."
 
 apply-secrets:
-    @echo "Deploying encrypted secrets to cluster..."
+    @echo "Deploying secrets from .env to cluster..."
     @kubectl create namespace cloudflare --dry-run=client -o yaml | kubectl apply -f -
-    @export SOPS_AGE_KEY_FILE={{AGE_KEY}} && sops --decrypt infrastructure/secrets/cloudflare.secret.yaml | sed 's/namespace: networking/namespace: cloudflare/g' | kubectl apply -f -
+    @kubectl create secret generic cloudflare-api-key \
+        --from-literal=token="{{env_var("CF_API_TOKEN")}}" \
+        -n cloudflare --dry-run=client -o yaml | kubectl apply -f -
+    @kubectl create secret generic cf-dns-auth \
+        --from-literal=token="{{env_var("CF_DNS_API_TOKEN")}}" \
+        -n cloudflare --dry-run=client -o yaml | kubectl apply -f -
 
 setup-git-auth:
     @if [ "{{env_var("GIT_SSH_KEY_PATH")}}" != "NONE" ]; then \
