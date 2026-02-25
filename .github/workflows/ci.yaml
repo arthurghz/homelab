@@ -31,7 +31,7 @@ jobs:
       - name: Kube-Linter
         uses: stackrox/kube-linter-action@v1.0.4
         with:
-          directory: apps
+          directory: bootstrap/apps
           # Optional: add infrastructure once it has more standard manifests
           # directory: infrastructure
 
