@@ -14,11 +14,11 @@ spec:
         ollama:
           gpu:
             enabled: false
-          extraEnv:
-            - name: NVIDIA_VISIBLE_DEVICES
-              value: all
-            - name: NVIDIA_DRIVER_CAPABILITIES
-              value: compute,utility
+        extraEnv:
+          - name: NVIDIA_VISIBLE_DEVICES
+            value: all
+          - name: NVIDIA_DRIVER_CAPABILITIES
+            value: compute,utility
         ingress:
           enabled: true
           hostname: ollama.unbund.com
