@@ -11,6 +11,7 @@ spec:
     targetRevision: 0.16.x
     helm:
       values: |
+        runtimeClassName: nvidia
         deviceDiscoveryStrategy: nvml
         env:
           - name: LD_LIBRARY_PATH
