@@ -15,6 +15,14 @@ spec:
           gpu:
             enabled: true
             type: nvidia
+        ingress:
+          enabled: true
+          hostname: ollama.unbund.com
+          annotations:
+            kubernetes.io/ingress.class: "nginx"
+            external-dns.alpha.kubernetes.io/hostname: "ollama.unbund.com"
+            external-dns.alpha.kubernetes.io/target: "22051e43-bc84-438d-b7c3-b829c1e2f6ad.cfargotunnel.com"
+            external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
         persistence:
           enabled: true
           size: 50Gi
@@ -22,5 +30,5 @@ spec:
     server: https://kubernetes.default.svc
     namespace: ollama
   syncPolicy:
-    automated: {prune: true, selfHeal: true}
+    automated: { prune: true, selfHeal: true }
     syncOptions: [CreateNamespace=true]
