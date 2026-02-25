@@ -87,14 +87,6 @@ spec:
                         subtitle: "Traffic Controller"
                         tag: "Network"
                         url: "#"
-                  - name: "Entertainment"
-                    icon: "fas fa-gamepad"
-                    items:
-                      - name: "OpenClaw"
-                        icon: "fas fa-cat"
-                        subtitle: "Classic Game"
-                        tag: "Game"
-                        url: "https://claw.unbund.com"
         persistence:
           config:
             enabled: true
