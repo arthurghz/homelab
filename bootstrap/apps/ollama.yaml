@@ -13,8 +13,7 @@ spec:
       values: |
         ollama:
           gpu:
-            enabled: true
-            type: nvidia
+            enabled: false
         ingress:
           enabled: true
           hostname: ollama.unbund.com
