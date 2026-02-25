@@ -42,6 +42,9 @@ nodes:
 - role: worker
   image: kindest/node:v1.31.0
   extraMounts: *nvidia-mounts
+- role: worker
+  image: kindest/node:v1.31.0
+  extraMounts: *nvidia-mounts
 containerdConfigPatches:
 - |
   [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
