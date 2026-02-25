@@ -20,7 +20,13 @@ spec:
             storageSpec:
               emptyDir:
                 medium: Memory
+            serviceMonitorSelectorNilUsesHelmValues: false
         grafana:
+          sidecar:
+            dashboards:
+              enabled: true
+              label: grafana_dashboard
+              searchNamespace: ALL
           podAnnotations:
             restartedAt: "2026-02-24T12:00:00Z"
           grafana.ini:
