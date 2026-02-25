@@ -20,12 +20,19 @@ spec:
                 image:
                   repository: vllm/vllm-openai
                   tag: latest
+                args:
+                  - "--model"
+                  - "facebook/opt-125m"
+                  - "--enforce-eager"
                 env:
-                  OLLAMA_BASE_URL: "http://ollama.ollama.svc.cluster.local:11434"
+                  - name: NVIDIA_VISIBLE_DEVICES
+                    value: all
+                  - name: NVIDIA_DRIVER_CAPABILITIES
+                    value: all
                 resources:
                   requests:
                     cpu: 500m
-                    memory: 1Gi
+                    memory: 2Gi
                     nvidia.com/gpu: 1
                   limits:
                     cpu: 1000m
