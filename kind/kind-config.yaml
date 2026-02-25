@@ -7,6 +7,8 @@ nodes:
 
   - role: worker
     image: kindest/node:v1.31.0
+    labels:
+      nvidia.com/gpu.present: "true"
     extraMounts: &nvidia
       - hostPath: /dev/dxg
         containerPath: /dev/dxg
@@ -17,18 +19,26 @@ nodes:
 
   - role: worker
     image: kindest/node:v1.31.0
+    labels:
+      nvidia.com/gpu.present: "true"
     extraMounts: *nvidia
 
   - role: worker
     image: kindest/node:v1.31.0
+    labels:
+      nvidia.com/gpu.present: "true"
     extraMounts: *nvidia
 
   - role: worker
     image: kindest/node:v1.31.0
+    labels:
+      nvidia.com/gpu.present: "true"
     extraMounts: *nvidia
 
   - role: worker
     image: kindest/node:v1.31.0
+    labels:
+      nvidia.com/gpu.present: "true"
     extraMounts: *nvidia
 
 containerdConfigPatches:

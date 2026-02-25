@@ -11,21 +11,17 @@ spec:
     targetRevision: 0.16.x
     helm:
       values: |
-        runtimeClassName: nvidia
         deviceDiscoveryStrategy: nvml
-        nodeSelector: {}
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/os
-                  operator: In
-                  values:
-                  - linux
         env:
           - name: LD_LIBRARY_PATH
             value: "/usr/lib/wsl/lib"
+        extraVolumeMounts:
+          - name: wsl-lib
+            mountPath: /usr/lib/wsl/lib
+        extraVolumes:
+          - name: wsl-lib
+            hostPath:
+              path: /usr/lib/wsl/lib
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
