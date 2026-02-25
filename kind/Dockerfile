@@ -8,19 +8,10 @@ RUN apt-get update && apt-get install -y curl gnupg \
       tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
     && apt-get update && apt-get install -y nvidia-container-toolkit
 
-# Configura o containerd para usar o nvidia-container-runtime
-RUN nvidia-ctk runtime configure --runtime=containerd
+# Configura o toolkit e gera a especificação CDI
+# No WSL2, o modo 'management' é necessário para o Kind
+RUN nvidia-ctk runtime configure --runtime=containerd && \
+    nvidia-ctk config --set nvidia-container-runtime.modes.cdi.default-kind=management
 
-# SCRIPT DE FIX PARA WSL2: Cria links simbólicos para as libs do Windows no local padrão do Linux
-# Isso evita o erro "LIBRARY_NOT_FOUND" pois o NVML procura em /usr/lib/x86_64-linux-gnu
-RUN printf '#!/bin/bash\n\
-for lib in /usr/lib/wsl/lib/libnvidia-*.so*; do\n\
-  ln -sf "$lib" "/usr/lib/x86_64-linux-gnu/$(basename "$lib")"\n\
-done\n\
-ln -sf /usr/lib/wsl/lib/libcuda.so.1.1 /usr/lib/x86_64-linux-gnu/libcuda.so.1\n\
-ln -sf /usr/lib/wsl/lib/libcuda.so.1.1 /usr/lib/x86_64-linux-gnu/libcuda.so\n\
-ldconfig\n' > /usr/local/bin/wsl-nvidia-fix.sh && chmod +x /usr/local/bin/wsl-nvidia-fix.sh
-
-# Cria o serviço para rodar o fix no boot do nó
-RUN printf "[Unit]\nDescription=Fix NVIDIA libs for WSL2\nAfter=multi-user.target\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/wsl-nvidia-fix.sh\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/wsl-nvidia-fix.service && \
-    systemctl enable wsl-nvidia-fix.service
+# Garante que as libs do WSL2 sejam encontradas no boot
+RUN echo "/usr/lib/wsl/lib" > /etc/ld.so.conf.d/wsl.conf

@@ -12,6 +12,7 @@ spec:
     helm:
       values: |
         server:
+          # Deixamos o Helm gerenciar os args básicos para evitar conflito no bootstrap
           config:
             users.anonymous.enabled: "true"
           rbacConfig:
@@ -21,3 +22,12 @@ spec:
     namespace: argocd
   syncPolicy:
     automated: { prune: true, selfHeal: true }
+    # Ignoramos diferenças nos args do server para o ArgoCD não tentar "corrigir" o que o Helm fez
+    syncOptions:
+      - RespectIgnoreDifferences=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      name: argocd-server
+      jsonPointers:
+        - /spec/template/spec/containers/0/args
