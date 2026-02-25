@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gpu-utils
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/arthurghz/homelab.git
+    targetRevision: HEAD
+    path: infrastructure/gpu
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ollama
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]
