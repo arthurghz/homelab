@@ -11,17 +11,9 @@ spec:
     targetRevision: 0.16.x
     helm:
       values: |
-        config:
-          map:
-            default: |-
-              version: v1
-              flags:
-                migStrategy: none
-              plugin:
-                deviceDiscoveryStrategy: nvml
+        deviceDiscoveryStrategy: nvml
+        failOnInitError: false
         env:
-          - name: FAIL_ON_INIT_ERROR
-            value: "false"
           - name: LD_LIBRARY_PATH
             value: "/usr/lib/wsl/lib"
   destination:
