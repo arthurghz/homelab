@@ -11,19 +11,16 @@ RUN apt-get update && apt-get install -y curl gnupg \
 # Configura o containerd para usar o nvidia-container-runtime
 RUN nvidia-ctk runtime configure --runtime=containerd
 
-# Configura o toolkit para o modo WSL2
-RUN nvidia-ctk config --set nvidia-container-runtime.modes.cdi.default-kind=management
+# SCRIPT DE FIX PARA WSL2: Cria links simbólicos para as libs do Windows no local padrão do Linux
+# Isso evita o erro "LIBRARY_NOT_FOUND" pois o NVML procura em /usr/lib/x86_64-linux-gnu
+RUN printf '#!/bin/bash\n\
+for lib in /usr/lib/wsl/lib/libnvidia-*.so*; do\n\
+  ln -sf "$lib" "/usr/lib/x86_64-linux-gnu/$(basename "$lib")"\n\
+done\n\
+ln -sf /usr/lib/wsl/lib/libcuda.so.1.1 /usr/lib/x86_64-linux-gnu/libcuda.so.1\n\
+ln -sf /usr/lib/wsl/lib/libcuda.so.1.1 /usr/lib/x86_64-linux-gnu/libcuda.so\n\
+ldconfig\n' > /usr/local/bin/wsl-nvidia-fix.sh && chmod +x /usr/local/bin/wsl-nvidia-fix.sh
 
-# CRITICAL PARA WSL2: Configura o nvidia-container-runtime para encontrar o runc e as libs
-RUN mkdir -p /etc/nvidia-container-runtime && \
-    echo "disable-require = false" > /etc/nvidia-container-runtime/config.toml && \
-    echo "ldconfig = \"/sbin/ldconfig\"" >> /etc/nvidia-container-runtime/config.toml && \
-    echo "runtime-kind = \"runc\"" >> /etc/nvidia-container-runtime/config.toml && \
-    echo "runtime-path = \"/usr/local/sbin/runc\"" >> /etc/nvidia-container-runtime/config.toml
-
-# Garante que o sistema procure bibliotecas no mount do WSL2
-RUN echo "/usr/lib/wsl/lib" > /etc/ld.so.conf.d/wsl.conf
-
-# Cria um serviço systemd para rodar o ldconfig no boot
-RUN printf "[Unit]\nDescription=Update ldconfig for WSL2\nAfter=multi-user.target\n\n[Service]\nType=oneshot\nExecStart=/sbin/ldconfig\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/wsl-ldconfig.service && \
-    systemctl enable wsl-ldconfig.service
+# Cria o serviço para rodar o fix no boot do nó
+RUN printf "[Unit]\nDescription=Fix NVIDIA libs for WSL2\nAfter=multi-user.target\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/wsl-nvidia-fix.sh\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/wsl-nvidia-fix.service && \
+    systemctl enable wsl-nvidia-fix.service
