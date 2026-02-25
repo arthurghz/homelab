@@ -11,7 +11,7 @@ spec:
     targetRevision: 0.16.x
     helm:
       values: |
-        runtimeClassName: nvidia
+        # Removido runtimeClassName para rodar no runtime padrão
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
