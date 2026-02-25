@@ -11,7 +11,14 @@ spec:
     targetRevision: 0.16.x
     helm:
       values: |
-        # Removido runtimeClassName para rodar no runtime padrão
+        config:
+          map:
+            default:
+              plugin:
+                deviceDiscoveryStrategy: nvml
+        env:
+          - name: FAIL_ON_INIT_ERROR
+            value: "false"
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
