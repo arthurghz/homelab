@@ -15,6 +15,7 @@ spec:
           extraArgs:
             - --insecure
           config:
+            url: https://argocd.unbund.com
             users.anonymous.enabled: "true"
           rbacConfig:
             policy.default: "role:admin"
