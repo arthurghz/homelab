@@ -17,4 +17,4 @@ RUN mkdir -p /etc/nvidia-container-runtime && \
     echo "ldconfig = \"/sbin/ldconfig\"" >> /etc/nvidia-container-runtime/config.toml
 
 # Garante que o sistema procure bibliotecas no mount do WSL2
-RUN echo "/usr/lib/wsl/lib" > /etc/ld.so.conf.d/wsl.conf
+RUN echo "/usr/lib/wsl/lib" > /etc/ld.so.conf.d/wsl.conf && ldconfig
