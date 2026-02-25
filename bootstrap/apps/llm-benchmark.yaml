@@ -20,7 +20,11 @@ spec:
                 image:
                   repository: vllm/vllm-openai
                   tag: latest
-                command: ["sleep", "infinity"]
+                args:
+                  - "facebook/opt-125m"
+                  - "--enforce-eager"
+                  - "--gpu-memory-utilization"
+                  - "0.5"
                 env:
                   - name: NVIDIA_VISIBLE_DEVICES
                     value: all
@@ -30,6 +34,8 @@ spec:
                     value: /usr/lib/wsl/lib
                   - name: NVIDIA_DISABLE_REQUIRE
                     value: "true"
+                  - name: VLLM_NO_USAGE_STATS
+                    value: "1"
                 resources:
                   requests:
                     cpu: 500m
