@@ -29,6 +29,8 @@ spec:
       containers:
       - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.1
         name: nvidia-device-plugin-ctr
+        args:
+          - "--device-discovery-strategy=nvml"
         env:
           - name: FAIL_ON_INIT_ERROR
             value: "false"
