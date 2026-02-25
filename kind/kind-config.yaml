@@ -18,7 +18,7 @@ nodes:
     protocol: TCP
 - role: worker
   image: kindest/node:v1.31.0
-  extraMounts:
+  extraMounts: &nvidia-mounts
     - hostPath: /dev/nvidia0
       containerPath: /dev/nvidia0
     - hostPath: /dev/nvidiactl
@@ -31,12 +31,17 @@ nodes:
       containerPath: /usr/bin/nvidia-container-runtime
     - hostPath: /usr/bin/nvidia-container-runtime-hook
       containerPath: /usr/bin/nvidia-container-runtime-hook
+    - hostPath: /usr/lib/wsl/lib
+      containerPath: /usr/lib/wsl/lib
 - role: worker
   image: kindest/node:v1.31.0
+  extraMounts: *nvidia-mounts
 - role: worker
   image: kindest/node:v1.31.0
+  extraMounts: *nvidia-mounts
 - role: worker
   image: kindest/node:v1.31.0
+  extraMounts: *nvidia-mounts
 containerdConfigPatches:
 - |
   [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
