@@ -16,7 +16,7 @@ spec:
             enabled: true
             type: nvidia
             number: 1
-          runtimeClassName: nvidia
+        runtimeClassName: nvidia
         resources:
           limits:
             nvidia.com/gpu: 1
@@ -24,7 +24,7 @@ spec:
           - name: NVIDIA_VISIBLE_DEVICES
             value: all
           - name: NVIDIA_DRIVER_CAPABILITIES
-            value: compute,utility
+            value: all
         ingress:
           enabled: true
           annotations:
