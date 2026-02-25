@@ -15,8 +15,6 @@ spec:
           updateStrategy:
             type: Recreate
           watchIngressWithoutClassName: true
-          nodeSelector:
-            ingress-ready: "true"
           hostPort:
             enabled: true
           service:
