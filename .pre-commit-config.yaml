@@ -20,7 +20,7 @@ repos:
       - id: kube-linter
         name: Kube-Linter
         entry: kube-linter
-        args: [lint, apps]
+        args: [lint, bootstrap/apps]
         language: system
         types: [yaml]
         pass_filenames: false
