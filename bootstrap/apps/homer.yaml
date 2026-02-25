@@ -24,6 +24,11 @@ spec:
                 paths:
                   - path: /
                     pathType: Prefix
+        persistence:
+          config:
+            enabled: true
+            type: configMap
+            name: homer-config
         configInline:
           title: "Unbund Homelab"
           subtitle: "AI & Automation Dashboard"
