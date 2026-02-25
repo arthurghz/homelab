@@ -14,7 +14,6 @@ nodes:
         containerPath: /dev/dxg
       - hostPath: /usr/lib/wsl/lib
         containerPath: /usr/lib/wsl/lib
-      # REMOVIDO: mount do binário do host que estava dando erro
 
   - role: worker
     image: homelab-kind-nvidia:v1.31.0
@@ -46,4 +45,4 @@ containerdConfigPatches:
       runtime_type = "io.containerd.runc.v2"
       privileged_without_host_devices = false
       [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
-        BinaryName = "nvidia-container-runtime"
+        BinaryName = "/usr/bin/nvidia-container-runtime"
