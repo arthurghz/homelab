@@ -6,28 +6,44 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://cloudflare.github.io/helm-charts
-    chart: cloudflare-tunnel
-    targetRevision: 0.3.2
+    repoURL: https://bjw-s-labs.github.io/helm-charts
+    chart: app-template
+    targetRevision: 3.2.1
     helm:
       values: |
-        cloudflare:
-          tunnelName: "homelab"
-          tunnelId: "22051e43-bc84-438d-b7c3-b829c1e2f6ad"
-          secretName: "cloudflare-api-key"
-          ingress:
-            - hostname: "*.unbund.com"
-              service: "https://ingress-nginx-controller.ingress-nginx.svc.cluster.local:443"
-              originRequest:
-                noTLSVerify: true
-        resources:
-          limits:
-            cpu: "100m"
-            memory: "128Mi"
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
-        replicaCount: 1
+        controllers:
+          main:
+            type: deployment
+            replicas: 1
+            containers:
+              main:
+                image:
+                  repository: cloudflare/cloudflared
+                  tag: latest
+                args:
+                  - tunnel
+                  - --no-autoupdate
+                  - --metrics
+                  - 0.0.0.0:60123
+                  - run
+                  - --token
+                  - $(CLOUDFLARE_TOKEN)
+                env:
+                  CLOUDFLARE_TOKEN:
+                    valueFrom:
+                      secretKeyRef:
+                        name: cloudflare-api-key
+                        key: token
+                probes:
+                  liveness:
+                    enabled: true
+                    custom: true
+                    spec:
+                      httpGet:
+                        path: /ready
+                        port: 60123
+                      initialDelaySeconds: 5
+                      periodSeconds: 5
   destination:
     server: https://kubernetes.default.svc
     namespace: cloudflare
