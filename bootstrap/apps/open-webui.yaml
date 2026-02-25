@@ -16,7 +16,8 @@ spec:
         ollamaUrls:
           - http://ollama.ollama.svc.cluster.local:11434
         extraEnvVars:
-          WEBUI_AUTH: "False"
+          - name: WEBUI_AUTH
+            value: "False"
         ingress:
           enabled: true
           ingressClassName: nginx
